@@ -1,7 +1,7 @@
 import { SimpleSurvey } from '../index';
 
-test('Parsing test isSurvey and isCheckbox', () => {
-  const validCheckboxSurvey = {
+test('Parsing test isSurvey and isCheckbox valid checkbox', () => {
+  const validCheckboxSurvey: Survey = {
     questions: {
       0: {
         type: 'Checkbox',

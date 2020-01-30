@@ -38,13 +38,13 @@ export const isSurvey = (object: any): object is Survey => {
     return false;
   }
 
-  if (!Array.isArray(object?.questions)) {
+  if (!object.questions) {
     return false;
-  }
-
-  for (const val of object.questions) {
-    if (!isCheckbox(val)) {
-      return false;
+  } else {
+    for (const val of object.questions) {
+      if (!isCheckbox(val)) {
+        return false;
+      }
     }
   }
 
