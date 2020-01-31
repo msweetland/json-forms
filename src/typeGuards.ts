@@ -1,25 +1,62 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isListSameType = (obj: any, type: string): boolean => {
-  if (Array.isArray(obj) && obj.length > 0) {
-    for (const val of obj) {
-      if (typeof val !== type) {
-        return false;
-      }
-    }
-    return true;
+const isArraySameType = (obj: any, type: string): boolean => {
+  // not an array
+  if (!Array.isArray(obj)) {
+    return false;
   }
-  return false;
+
+  for (const val of obj) {
+    if (typeof val !== type) {
+      return false;
+    }
+  }
+
+  // empty array or items are the same
+  return true;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isCheckbox = (object: any): object is Checkbox => {
-  return (
-    object?.type === 'Checkbox' &&
-    isListSameType(object?.answers, 'string') &&
-    (Array.isArray(object?.userAnswer) ||
-      isListSameType(object?.userAnswer, 'string')) &&
-    typeof object?.type === 'number'
-  );
+export const isCheckbox = (object: any): object is Checkbox => {
+  if (object?.type !== 'Checkbox') {
+    return false;
+  }
+
+  if (typeof object.nextQuestion !== 'number') {
+    return false;
+  }
+
+  if (object.showIf && typeof object.showIf !== 'number') {
+    return false;
+  }
+
+  // user answers length > answers length
+  // empty answers array
+  // answers is not an array
+  // user answer is not an array
+
+  return true;
+};
+
+export const isEmail = (object: any): object is Email => {
+  if (object?.type !== 'Email') {
+    return false;
+  }
+
+  if (typeof object.nextQuestion !== 'number') {
+    return false;
+  }
+
+  if (object.showIf && typeof object.showIf !== 'number') {
+    return false;
+  }
+
+  if (typeof object?.userAnswer !== 'string') {
+    return false;
+  }
+
+  // test valid email
+  const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  return emailRegex.test(object.userAnswer as string);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,19 +71,28 @@ export const isSurvey = (object: any): object is Survey => {
     return false;
   }
 
-  if (!isListSameType(object?.endQuestions, 'number')) {
+  if (!isArraySameType(object?.endQuestions, 'number')) {
     return false;
   }
 
-  if (!object.questions) {
+  if (!object?.questions) {
+    return false;
+  } else if (Object.keys(object.questions).length === 0) {
     return false;
   } else {
     for (const val of object.questions) {
-      if (!isCheckbox(val)) {
+      if (!isCheckbox(val) || !isEmail(val)) {
         return false;
       }
     }
   }
-
   return true;
 };
+
+// validate number
+
+// validate radio
+
+// validate time
+//  validate SQL time
+//  validate time given hasn't happened yet

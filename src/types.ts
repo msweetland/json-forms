@@ -53,16 +53,16 @@ interface Text {
   showIf?: number;
 }
 
-interface Time {
-  type: 'Time';
-  userAnswer: number; //timestamp
+interface Date {
+  type: 'Date';
+  userAnswer: string; // SQL Timestamp
   nextQuestion: number;
   showIf?: number;
 }
 
 interface Survey {
   questions: {
-    [key: number]: Checkbox | Email | Num | Radio | Range | Comment | Time;
+    [key: number]: Checkbox | Email | Num | Radio | Range | Comment | Date;
   };
   version: number;
   name: string;
