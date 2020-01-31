@@ -20,15 +20,6 @@ export const isCheckbox = (object: any): object is Checkbox => {
   if (object?.type !== 'Checkbox') {
     return false;
   }
-
-  if (typeof object.nextQuestion !== 'number') {
-    return false;
-  }
-
-  if (object.showIf && typeof object.showIf !== 'number') {
-    return false;
-  }
-
   // user answers length > answers length
   // empty answers array
   // answers is not an array
@@ -37,19 +28,11 @@ export const isCheckbox = (object: any): object is Checkbox => {
   return true;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isEmail = (object: any): object is Email => {
   if (object?.type !== 'Email') {
     return false;
   }
-
-  if (typeof object.nextQuestion !== 'number') {
-    return false;
-  }
-
-  if (object.showIf && typeof object.showIf !== 'number') {
-    return false;
-  }
-
   if (typeof object?.userAnswer !== 'string') {
     return false;
   }
@@ -61,17 +44,7 @@ export const isEmail = (object: any): object is Email => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isSurvey = (object: any): object is Survey => {
-  if (typeof object?.version !== 'number') {
-    return false;
-  }
   if (typeof object?.name !== 'string') {
-    return false;
-  }
-  if (typeof object?.startQuestion !== 'number') {
-    return false;
-  }
-
-  if (!isArraySameType(object?.endQuestions, 'number')) {
     return false;
   }
 
@@ -88,11 +61,3 @@ export const isSurvey = (object: any): object is Survey => {
   }
   return true;
 };
-
-// validate number
-
-// validate radio
-
-// validate time
-//  validate SQL time
-//  validate time given hasn't happened yet

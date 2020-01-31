@@ -7,65 +7,58 @@ type FormTypes =
   | 'Text'
   | 'Time';
 
-interface Checkbox {
-  type: 'Checkbox';
-  answers: string[];
-  userAnswer: string[];
-  nextQuestion: number;
-  showIf?: number;
+type AnswerType = number | string | string[];
+
+interface Question {
+  type: FormTypes;
+  title: string;
+  description?: string;
+  possibleAnswers?: string[]; // used on MC
+  userAnswer: AnswerType;
+  isRequired: boolean;
+  nested?: Question[];
+  showNestedWithAnswer?: AnswerType | boolean; // true to show on any answer
 }
 
-interface Email {
+interface Checkbox extends Question {
+  type: 'Checkbox';
+  possibleAnswers?: string[];
+  userAnswer: string[];
+}
+
+interface Email extends Question {
   type: 'Email';
   userAnswer: string;
-  nextQuestion: number;
-  showIf?: number;
 }
 
-interface Num {
+interface Num extends Question {
   type: 'Num';
   userAnswer: number;
-  nextQuestion: number;
-  showIf?: number;
 }
 
-interface Radio {
+interface Radio extends Question {
   type: 'Radio';
-  answers: string[];
   userAnswer: string;
-  nextQuestion: number;
-  showIf?: number;
 }
 
-interface Range {
+interface Range extends Question {
   type: 'Range';
-  answersFrom: number;
-  answersTo: number;
+  min: number;
+  max: number;
   userAnswer: number;
-  nextQuestion: number;
-  showIf?: number;
 }
 
-interface Text {
+interface Text extends Question {
   type: 'Text';
   userAnswer: string;
-  nextQuestion: number;
-  showIf?: number;
 }
 
-interface Date {
+interface Date extends Question {
   type: 'Date';
   userAnswer: string; // SQL Timestamp
-  nextQuestion: number;
-  showIf?: number;
 }
 
 interface Survey {
-  questions: {
-    [key: number]: Checkbox | Email | Num | Radio | Range | Comment | Date;
-  };
-  version: number;
+  questions: Question[];
   name: string;
-  startQuestion: number;
-  endQuestions: number[];
 }
