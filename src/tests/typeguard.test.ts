@@ -42,12 +42,6 @@ test('Validate isSurvey without questions', () => {
 
   survey.questions[0].children = [cb2];
   expect(isSurvey(survey)).toBe(true);
-
-  // delete survey.version;
-  // expect(() => new SimpleSurvey(JSON.stringify(survey))).toThrow(Error);
-
-  // delete survey.endQuestions;
-  // expect(() => new SimpleSurvey(JSON.stringify(survey))).toThrow(Error);
 });
 
 test('Test isCheckbox typeGuard.', () => {

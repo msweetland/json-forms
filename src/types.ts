@@ -15,7 +15,7 @@ interface Question {
   possibleAnswers?: string[]; // used on MC
   userAnswer?: number | string | string[];
   children?: Question[];
-  showChildrenOn?: number | string | string[] | boolean; // true to show on any answer
+  showChildrenOn?: string[] | boolean; // true to show on any answer, string[] for multiple choice
   metadata?: string; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
@@ -29,20 +29,20 @@ interface CheckboxForm extends Question {
 interface EmailForm extends Question {
   type: 'Email';
   userAnswer?: string;
-  showChildrenOn?: string;
+  showChildrenOn?: boolean;
 }
 
 interface NumForm extends Question {
   type: 'Num';
   userAnswer?: number;
-  showChildrenOn?: number;
+  showChildrenOn?: boolean;
 }
 
 interface RadioForm extends Question {
   type: 'Radio';
   possibleAnswers: string[];
   userAnswer?: string;
-  showChildrenOn?: string;
+  showChildrenOn?: string[];
 }
 
 interface RangeForm extends Question {
@@ -50,17 +50,19 @@ interface RangeForm extends Question {
   min: number;
   max: number;
   userAnswer?: number;
-  showChildrenOn: number;
+  showChildrenOn?: boolean;
 }
 
 interface TextForm extends Question {
   type: 'Text';
   userAnswer?: string;
+  showChildrenOn?: boolean;
 }
 
 interface TimeForm extends Question {
   type: 'Time';
   userAnswer?: string; // SQL Timestamp
+  showChildrenOn?: boolean;
 }
 
 interface Survey {
