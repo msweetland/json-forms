@@ -8,20 +8,6 @@ const isPossibleAnswers = (obj: any): obj is string[] => {
   );
 };
 
-// const toPostgres = (timestamp: number): string => {
-//   const pad = (num: number): string => String('0' + num).slice(-2);
-//   const date = new Date(timestamp);
-//   const time = date
-//     .toString()
-//     .split(date.getFullYear() + ' ')[1]
-//     .split('(')[0]
-//     .slice(0, -3)
-//     .replace(/ GMT/, '.' + date.getMilliseconds());
-//   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
-//     date.getDate()
-//   )} ${time}`;
-// };
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isCheckbox = (object: any): object is CheckboxForm => {
   // check type is valid
@@ -153,21 +139,67 @@ export const isTime = (object: any): object is TextForm => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isQuestion = (object: any): object is Question => {
+  if (typeof object?.title !== 'string') {
+    return false;
+  }
+  if (typeof object?.isRequired !== 'boolean') {
+    return false;
+  }
+
+  if (object.description && typeof object.description !== 'string') {
+    return false;
+  }
+
+  if (object.metadata && typeof object.metadata !== 'string') {
+    return false;
+  }
+
+  if (
+    !(
+      isCheckbox(object) ||
+      isEmail(object) ||
+      isNum(object) ||
+      isRadio(object) ||
+      isRange(object) ||
+      isTime(object) ||
+      isText(object)
+    )
+  ) {
+    return false;
+  }
+
+  if (object.children) {
+    if (Array.isArray(object.children) && object.children.length !== 0) {
+      for (const question of object.children) {
+        if (!isQuestion(question)) {
+          return false;
+        }
+      }
+    } else {
+      return false;
+    }
+  }
+  return true;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isSurvey = (object: any): object is Survey => {
   if (typeof object?.name !== 'string') {
     return false;
   }
+  if (object.metadata && typeof object.metadata !== 'string') {
+    return false;
+  }
 
-  if (!object?.questions) {
-    return false;
-  } else if (Object.keys(object.questions).length === 0) {
-    return false;
-  } else {
-    for (const val of object.questions) {
-      if (!isCheckbox(val) || !isEmail(val)) {
+  if (Array.isArray(object.questions) && object.questions.length !== 0) {
+    for (const question of object.questions) {
+      if (!isQuestion(question)) {
         return false;
       }
     }
+  } else {
+    return false;
   }
   return true;
 };

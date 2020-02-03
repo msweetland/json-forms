@@ -7,40 +7,42 @@ type FormTypes =
   | 'Text'
   | 'Time';
 
-type AnswerType = number | string | string[];
-
 interface Question {
   type: FormTypes;
   title: string;
+  isRequired: boolean;
   description?: string;
   possibleAnswers?: string[]; // used on MC
-  userAnswer?: AnswerType;
-  isRequired: boolean;
+  userAnswer?: number | string | string[];
   children?: Question[];
-  showChildrenOn?: AnswerType | boolean; // true to show on any answer
-  metadata?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  showChildrenOn?: number | string | string[] | boolean; // true to show on any answer
+  metadata?: string; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 interface CheckboxForm extends Question {
   type: 'Checkbox';
   possibleAnswers: string[];
   userAnswer?: string[];
+  showChildrenOn?: string[];
 }
 
 interface EmailForm extends Question {
   type: 'Email';
   userAnswer?: string;
+  showChildrenOn?: string;
 }
 
 interface NumForm extends Question {
   type: 'Num';
   userAnswer?: number;
+  showChildrenOn?: number;
 }
 
 interface RadioForm extends Question {
   type: 'Radio';
   possibleAnswers: string[];
   userAnswer?: string;
+  showChildrenOn?: string;
 }
 
 interface RangeForm extends Question {
@@ -48,6 +50,7 @@ interface RangeForm extends Question {
   min: number;
   max: number;
   userAnswer?: number;
+  showChildrenOn: number;
 }
 
 interface TextForm extends Question {
@@ -63,4 +66,5 @@ interface TimeForm extends Question {
 interface Survey {
   questions: Question[];
   name: string;
+  metadata?: string;
 }

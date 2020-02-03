@@ -1,5 +1,6 @@
 // import { SimpleSurvey } from '../index';
 import {
+  isSurvey,
   isCheckbox,
   isEmail,
   isNum,
@@ -8,27 +9,46 @@ import {
   isTime,
   isRange,
 } from '../typeGuards';
+// import { SimpleSurvey } from '..';
 
-// test('Validate isSurvey', () => {
-//   const survey: Survey = {
-//     questions: {},
-//     version: 1,
-//     name: 'Insurance Application',
-//     startQuestion: 0,
-//     endQuestions: [0],
-//   };
+test('Validate isSurvey without questions', () => {
+  const survey: Survey = {
+    name: 'test survey',
+    questions: [],
+  };
 
-//   expect(() => new SimpleSurvey(JSON.stringify(survey))).toThrow(Error);
+  expect(isSurvey(survey)).toBe(false);
+  const cb: CheckboxForm = {
+    type: 'Checkbox',
+    title: 'Test Checkbox',
+    description: 'description',
+    possibleAnswers: ['yes', 'no'],
+    isRequired: true,
+  };
 
-//   delete survey.name;
-//   expect(() => new SimpleSurvey(JSON.stringify(survey))).toThrow(Error);
+  survey.questions.push(cb);
+  expect(isSurvey(survey)).toBe(true);
 
-//   delete survey.version;
-//   expect(() => new SimpleSurvey(JSON.stringify(survey))).toThrow(Error);
+  survey.questions[0].children = [];
+  expect(isSurvey(survey)).toBe(false);
 
-//   delete survey.endQuestions;
-//   expect(() => new SimpleSurvey(JSON.stringify(survey))).toThrow(Error);
-// });
+  const cb2: CheckboxForm = {
+    type: 'Checkbox',
+    title: 'Test Checkbox',
+    description: 'description',
+    possibleAnswers: ['yes', 'no'],
+    isRequired: true,
+  };
+
+  survey.questions[0].children = [cb2];
+  expect(isSurvey(survey)).toBe(true);
+
+  // delete survey.version;
+  // expect(() => new SimpleSurvey(JSON.stringify(survey))).toThrow(Error);
+
+  // delete survey.endQuestions;
+  // expect(() => new SimpleSurvey(JSON.stringify(survey))).toThrow(Error);
+});
 
 test('Test isCheckbox typeGuard.', () => {
   const cb: CheckboxForm = {
