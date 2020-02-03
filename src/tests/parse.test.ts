@@ -1,5 +1,13 @@
 // import { SimpleSurvey } from '../index';
-import { isCheckbox, isEmail, isNum, isRadio } from '../typeGuards';
+import {
+  isCheckbox,
+  isEmail,
+  isNum,
+  isRadio,
+  isText,
+  isTime,
+  isRange,
+} from '../typeGuards';
 
 // test('Validate isSurvey', () => {
 //   const survey: Survey = {
@@ -23,7 +31,7 @@ import { isCheckbox, isEmail, isNum, isRadio } from '../typeGuards';
 // });
 
 test('Test isCheckbox typeGuard.', () => {
-  const cb: Checkbox = {
+  const cb: CheckboxForm = {
     type: 'Checkbox',
     title: 'Test Checkbox',
     description: 'description',
@@ -46,7 +54,7 @@ test('Test isCheckbox typeGuard.', () => {
 });
 
 test('Test isEmail typeGuard.', () => {
-  const em: Email = {
+  const em: EmailForm = {
     type: 'Email',
     title: 'Email test',
     description: 'description',
@@ -60,7 +68,7 @@ test('Test isEmail typeGuard.', () => {
 });
 
 test('Test isNum typeGuard.', () => {
-  const num: Num = {
+  const num: NumForm = {
     type: 'Num',
     title: 'Num test',
     description: 'description',
@@ -75,9 +83,9 @@ test('Test isNum typeGuard.', () => {
 });
 
 test('Test isRadio typeGuard.', () => {
-  const radio: Radio = {
+  const radio: RadioForm = {
     type: 'Radio',
-    title: 'Num test',
+    title: 'Radio test',
     description: 'description',
     possibleAnswers: ['yes', 'no'],
     isRequired: true,
@@ -90,4 +98,61 @@ test('Test isRadio typeGuard.', () => {
   expect(isRadio(radio)).toBe(false);
   radio.userAnswer = 'negative';
   expect(isRadio(radio)).toBe(false);
+});
+
+test('Test isRange typeGuard.', () => {
+  const range = {
+    type: 'Range',
+    title: 'Range test',
+    description: 'description',
+    isRequired: true,
+  } as RangeForm;
+  expect(isRange(range)).toBe(false);
+  range.min = 0;
+  expect(isRange(range)).toBe(false);
+  range.max = 0;
+  expect(isRange(range)).toBe(false);
+  range.max = 1;
+  console.log(range);
+  expect(isRange(range)).toBe(true);
+
+  range.userAnswer = 1;
+  expect(isRange(range)).toBe(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  range.userAnswer = 'negative' as any;
+  expect(isRange(range)).toBe(false);
+  range.userAnswer = 2;
+  expect(isRange(range)).toBe(false);
+});
+
+test('Test isText typeGuard.', () => {
+  const text: TextForm = {
+    type: 'Text',
+    title: 'Text test',
+    description: 'description',
+    isRequired: true,
+  };
+  expect(isText(text)).toBe(true);
+  text.userAnswer = 'yes';
+  expect(isText(text)).toBe(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  text.userAnswer = 1 as any;
+  expect(isText(text)).toBe(false);
+});
+
+test('Test isTime typeGuard.', () => {
+  const time: TimeForm = {
+    type: 'Time',
+    title: 'Time test',
+    description: 'description',
+    isRequired: true,
+  };
+  expect(isTime(time)).toBe(true);
+  time.userAnswer = '2018-06-21 12:55:59';
+  expect(isTime(time)).toBe(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  time.userAnswer = 1 as any;
+  expect(isTime(time)).toBe(false);
+  time.userAnswer = '2018-06-21 12:55:61';
+  expect(isTime(time)).toBe(false);
 });

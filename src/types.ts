@@ -18,44 +18,45 @@ interface Question {
   isRequired: boolean;
   children?: Question[];
   showChildrenOn?: AnswerType | boolean; // true to show on any answer
+  metadata?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
-interface Checkbox extends Question {
+interface CheckboxForm extends Question {
   type: 'Checkbox';
   possibleAnswers: string[];
   userAnswer?: string[];
 }
 
-interface Email extends Question {
+interface EmailForm extends Question {
   type: 'Email';
   userAnswer?: string;
 }
 
-interface Num extends Question {
+interface NumForm extends Question {
   type: 'Num';
   userAnswer?: number;
 }
 
-interface Radio extends Question {
+interface RadioForm extends Question {
   type: 'Radio';
   possibleAnswers: string[];
   userAnswer?: string;
 }
 
-interface Range extends Question {
+interface RangeForm extends Question {
   type: 'Range';
   min: number;
   max: number;
   userAnswer?: number;
 }
 
-interface Text extends Question {
+interface TextForm extends Question {
   type: 'Text';
   userAnswer?: string;
 }
 
-interface Date extends Question {
-  type: 'Date';
+interface TimeForm extends Question {
+  type: 'Time';
   userAnswer?: string; // SQL Timestamp
 }
 
