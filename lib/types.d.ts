@@ -1,57 +1,49 @@
 declare type FormTypes = 'Checkbox' | 'Email' | 'Num' | 'Radio' | 'Range' | 'Text' | 'Time';
-interface Checkbox {
+declare type AnswerType = number | string | string[];
+interface Question {
+    type: FormTypes;
+    title: string;
+    description?: string;
+    possibleAnswers?: string[];
+    userAnswer?: AnswerType;
+    isRequired: boolean;
+    children?: Question[];
+    showChildrenOn?: AnswerType | boolean;
+}
+interface Checkbox extends Question {
     type: 'Checkbox';
-    answers: string[];
-    userAnswer: string[];
-    nextQuestion: number;
-    showIf?: number;
+    possibleAnswers: string[];
+    userAnswer?: string[];
 }
-interface Email {
+interface Email extends Question {
     type: 'Email';
-    userAnswer: string;
-    nextQuestion: number;
-    showIf?: number;
+    userAnswer?: string;
 }
-interface Num {
+interface Num extends Question {
     type: 'Num';
-    userAnswer: number;
-    nextQuestion: number;
-    showIf?: number;
+    userAnswer?: number;
 }
-interface Radio {
+interface Radio extends Question {
     type: 'Radio';
-    answers: string[];
-    userAnswer: string;
-    nextQuestion: number;
-    showIf?: number;
+    possibleAnswers: string[];
+    userAnswer?: string;
 }
-interface Range {
+interface Range extends Question {
     type: 'Range';
-    answersFrom: number;
-    answersTo: number;
-    userAnswer: number;
-    nextQuestion: number;
-    showIf?: number;
+    min: number;
+    max: number;
+    userAnswer?: number;
 }
-interface Text {
+interface Text extends Question {
     type: 'Text';
-    userAnswer: string;
-    nextQuestion: number;
-    showIf?: number;
+    userAnswer?: string;
 }
-interface Time {
-    type: 'Time';
-    userAnswer: number;
-    nextQuestion: number;
-    showIf?: number;
+interface Date extends Question {
+    type: 'Date';
+    userAnswer?: string;
 }
 interface Survey {
-    questions: {
-        [key: number]: Checkbox | Email | Num | Radio | Range | Comment | Time;
-    };
-    version: number;
+    questions: Question[];
     name: string;
-    startQuestion: number;
-    endQuestions: number[];
 }
 //# sourceMappingURL=types.d.ts.map

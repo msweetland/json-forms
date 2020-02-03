@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "CommonJS",
+    "lib": ["ES2015", "dom"],
     "strict": true,
     "outDir": "lib",
     "esModuleInterop": true,

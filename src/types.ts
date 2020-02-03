@@ -14,48 +14,49 @@ interface Question {
   title: string;
   description?: string;
   possibleAnswers?: string[]; // used on MC
-  userAnswer: AnswerType;
+  userAnswer?: AnswerType;
   isRequired: boolean;
-  nested?: Question[];
-  showNestedWithAnswer?: AnswerType | boolean; // true to show on any answer
+  children?: Question[];
+  showChildrenOn?: AnswerType | boolean; // true to show on any answer
 }
 
 interface Checkbox extends Question {
   type: 'Checkbox';
-  possibleAnswers?: string[];
-  userAnswer: string[];
+  possibleAnswers: string[];
+  userAnswer?: string[];
 }
 
 interface Email extends Question {
   type: 'Email';
-  userAnswer: string;
+  userAnswer?: string;
 }
 
 interface Num extends Question {
   type: 'Num';
-  userAnswer: number;
+  userAnswer?: number;
 }
 
 interface Radio extends Question {
   type: 'Radio';
-  userAnswer: string;
+  possibleAnswers: string[];
+  userAnswer?: string;
 }
 
 interface Range extends Question {
   type: 'Range';
   min: number;
   max: number;
-  userAnswer: number;
+  userAnswer?: number;
 }
 
 interface Text extends Question {
   type: 'Text';
-  userAnswer: string;
+  userAnswer?: string;
 }
 
 interface Date extends Question {
   type: 'Date';
-  userAnswer: string; // SQL Timestamp
+  userAnswer?: string; // SQL Timestamp
 }
 
 interface Survey {

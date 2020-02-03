@@ -1,5 +1,5 @@
 // import { SimpleSurvey } from '../index';
-import { isCheckbox, isEmail } from '../typeGuards';
+import { isCheckbox, isEmail, isNum, isRadio } from '../typeGuards';
 
 // test('Validate isSurvey', () => {
 //   const survey: Survey = {
@@ -22,39 +22,72 @@ import { isCheckbox, isEmail } from '../typeGuards';
 //   expect(() => new SimpleSurvey(JSON.stringify(survey))).toThrow(Error);
 // });
 
-test('Validate isCheckbox', () => {
+test('Test isCheckbox typeGuard.', () => {
   const cb: Checkbox = {
     type: 'Checkbox',
-    answers: ['yes', 'no'],
-    userAnswer: [],
-    nextQuestion: 0,
-    showIf: 1,
+    title: 'Test Checkbox',
+    description: 'description',
+    possibleAnswers: ['yes', 'no'],
+    isRequired: true,
   };
   expect(isCheckbox(cb)).toBe(true);
+  cb.userAnswer = ['yes', 'yes'];
+  expect(isCheckbox(cb)).toBe(false);
   cb.userAnswer = ['yes', 'no'];
-  delete cb.showIf;
   expect(isCheckbox(cb)).toBe(true);
-  cb.userAnswer.push('yes');
+  cb.userAnswer = [];
   expect(isCheckbox(cb)).toBe(false);
-  cb.userAnswer = ['yes', 'no'];
-  cb.answers = [];
+  cb.possibleAnswers = [];
   expect(isCheckbox(cb)).toBe(false);
-  delete cb.nextQuestion;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const badAns = [1, 2, 3] as any;
+  cb.possibleAnswers = badAns;
   expect(isCheckbox(cb)).toBe(false);
 });
 
-test('Validate isEmail', () => {
+test('Test isEmail typeGuard.', () => {
   const em: Email = {
     type: 'Email',
-    userAnswer: '',
-    nextQuestion: 0,
-    showIf: 1,
+    title: 'Email test',
+    description: 'description',
+    isRequired: true,
   };
-  expect(isEmail(em)).toBe(false);
+  expect(isEmail(em)).toBe(true);
   em.userAnswer = 'mjs@mjs.com';
   expect(isEmail(em)).toBe(true);
-  delete em.showIf;
-  expect(isEmail(em)).toBe(true);
-  delete em.nextQuestion;
+  em.userAnswer = 'bad email';
   expect(isEmail(em)).toBe(false);
+});
+
+test('Test isNum typeGuard.', () => {
+  const num: Num = {
+    type: 'Num',
+    title: 'Num test',
+    description: 'description',
+    isRequired: true,
+  };
+  expect(isNum(num)).toBe(true);
+  num.userAnswer = 1;
+  expect(isNum(num)).toBe(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  num.userAnswer = 'bad number' as any;
+  expect(isNum(num)).toBe(false);
+});
+
+test('Test isRadio typeGuard.', () => {
+  const radio: Radio = {
+    type: 'Radio',
+    title: 'Num test',
+    description: 'description',
+    possibleAnswers: ['yes', 'no'],
+    isRequired: true,
+  };
+  expect(isRadio(radio)).toBe(true);
+  radio.userAnswer = 'yes';
+  expect(isRadio(radio)).toBe(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  radio.userAnswer = 1 as any;
+  expect(isRadio(radio)).toBe(false);
+  radio.userAnswer = 'negative';
+  expect(isRadio(radio)).toBe(false);
 });

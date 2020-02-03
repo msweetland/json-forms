@@ -31,6 +31,48 @@ export class SimpleSurvey {
   };
 
   public isComplete = (): boolean => {
+
+    const isCompletehelper = (quest: Question): boolean => {
+      const {userAnswer, children, showChildrenOn, isRequired} = quest;
+      // if question not answered and not required and doesn't have children return true
+      if (!userAnswer && !isRequired) {
+        return true;
+      }
+
+
+
+      // if answered and answer == showChildren and children check children
+
+
+      
+      
+      else if (children && )
+      
+      else if (children) {
+        return 
+      }
+
+
+      
+
+
+      
+      if (userAnswer ) {
+
+      }
+
+
+
+      // check children if question is correct answer and has children
+      // if 
+      if ( quest.isRequired) 
+    }
+
+    for (const question of this._survey.questions) {
+      question.
+    }
+
+
     //  get all possible questions
     // linked list traverse to see if question is end
     return true;
