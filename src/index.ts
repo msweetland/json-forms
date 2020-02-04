@@ -69,6 +69,7 @@ export class JsonSurvey {
       }
       // is showing children check if children are required
       if (quest.children && isQuestionShowingChildren(quest)) {
+        console.log('checking if children are complete');
         return _.every(quest.children.map(isQuestionComplete));
       }
 

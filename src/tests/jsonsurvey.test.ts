@@ -203,6 +203,5 @@ test('Test isComplete in JsonSurvey', () => {
   expect(S.isComplete()).toEqual(false);
 
   expect(() => S.answerQuestion([0], 'Checkbox', ['yes'])).not.toThrow(Error);
-  console.log(survey);
   expect(S.isComplete()).toEqual(false);
 });

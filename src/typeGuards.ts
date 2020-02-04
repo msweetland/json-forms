@@ -9,12 +9,21 @@ const isPossibleAnswers = (obj: any): obj is string[] => {
 };
 
 export const isQuestionShowingChildren = (quest: Question): boolean => {
-  if (!quest.userAnswer) {
-    return false;
-  } else if (typeof quest.showChildrenOn === 'boolean') {
+  if (typeof quest.showChildrenOn === 'boolean') {
     return quest.showChildrenOn;
+  } else if (quest.userAnswer) {
+    if (Array.isArray(quest.userAnswer)) {
+      for (const answer in quest.userAnswer) {
+        if (_.includes(quest.possibleAnswers, answer)) {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return _.includes(quest.possibleAnswers, quest.userAnswer);
+    }
   } else {
-    return _.includes(quest.possibleAnswers, quest.userAnswer);
+    return false;
   }
 };
 
