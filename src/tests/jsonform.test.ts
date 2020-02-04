@@ -7,6 +7,7 @@ test('Test static validateSurvey in JsonForm', () => {
     questions: [
       {
         title: 'question 1',
+        answerName: 'likesX',
         type: 'Checkbox',
         possibleAnswers: ['yes', 'no'],
         isRequired: false,
@@ -15,12 +16,14 @@ test('Test static validateSurvey in JsonForm', () => {
           {
             title: 'question 2',
             type: 'Checkbox',
+            answerName: 'likesY',
             possibleAnswers: ['yes', 'no'],
             isRequired: false,
           },
           {
             title: 'question 3',
             type: 'Checkbox',
+            answerName: 'likesZ',
             possibleAnswers: ['yes', 'no'],
             isRequired: false,
           },
@@ -40,18 +43,21 @@ test('Test answerquestion in JsonForm', () => {
       {
         title: 'Do you like',
         type: 'Checkbox',
+        answerName: 'likesX',
         possibleAnswers: ['yes', 'no'],
         isRequired: false,
         showChildrenOn: true,
         children: [
           {
             title: 'User Email 1',
+            answerName: 'email1',
             type: 'Email',
             isRequired: false,
             showChildrenOn: true,
             children: [
               {
                 title: 'User Email 2',
+                answerName: 'email2',
                 type: 'Email',
                 isRequired: false,
               },
@@ -59,6 +65,7 @@ test('Test answerquestion in JsonForm', () => {
           },
           {
             title: 'User Email 3',
+            answerName: 'email3',
             type: 'Email',
             isRequired: false,
           },
@@ -104,18 +111,21 @@ test('Test answerquestion in JsonForm', () => {
         {
           title: 'Do you like',
           type: 'Checkbox',
+          answerName: 'likesX',
           possibleAnswers: ['yes', 'no'],
           isRequired: false,
           showChildrenOn: true,
           children: [
             {
               title: 'User Email 1',
+              answerName: 'email1',
               type: 'Email',
               isRequired: false,
               showChildrenOn: true,
               children: [
                 {
                   title: 'User Email 2',
+                  answerName: 'email2',
                   type: 'Email',
                   isRequired: false,
                   userAnswer: 'test@test.com',
@@ -125,6 +135,7 @@ test('Test answerquestion in JsonForm', () => {
             },
             {
               title: 'User Email 3',
+              answerName: 'email3',
               type: 'Email',
               isRequired: false,
               userAnswer: 'test@test.com',

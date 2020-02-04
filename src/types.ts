@@ -12,6 +12,7 @@ type AnswerTypes = number | string | string[];
 interface Question {
   type: FormTypes;
   title: string;
+  answerName: string;
   isRequired: boolean;
   description?: string;
   possibleAnswers?: string[]; // used on MC

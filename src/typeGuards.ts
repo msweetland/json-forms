@@ -8,23 +8,23 @@ const isPossibleAnswers = (obj: any): obj is string[] => {
   );
 };
 
-export const areQuestionTitlesUnique = (obj: Survey): boolean => {
-  const titles = new Set<string>();
-  const isUniqueTitle = (quest: Question): boolean => {
-    if (titles.has(quest.title)) {
+export const areAnswerNamesUnique = (obj: Survey): boolean => {
+  const answerNames = new Set<string>();
+  const isUniqueAnswerName = (quest: Question): boolean => {
+    if (answerNames.has(quest.answerName)) {
       return false;
     } else {
-      titles.add(quest.title);
+      answerNames.add(quest.answerName);
     }
 
     if (quest.children) {
-      const childrenUnique: boolean[] = quest.children.map(isUniqueTitle);
+      const childrenUnique: boolean[] = quest.children.map(isUniqueAnswerName);
       return _.every(childrenUnique);
     }
     return true;
   };
 
-  return _.every(obj.questions.map(isUniqueTitle));
+  return _.every(obj.questions.map(isUniqueAnswerName));
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -207,6 +207,11 @@ export const isQuestion = (object: any): object is Question => {
   if (typeof object?.title !== 'string') {
     return false;
   }
+
+  if (typeof object?.answerName !== 'string') {
+    return false;
+  }
+
   if (typeof object?.isRequired !== 'boolean') {
     return false;
   }
@@ -274,7 +279,7 @@ export const isSurvey = (object: any): object is Survey => {
     return false;
   }
 
-  if (!areQuestionTitlesUnique(object)) {
+  if (!areAnswerNamesUnique(object)) {
     return false;
   }
 

@@ -8,7 +8,7 @@ import {
   isText,
   isTime,
   isRange,
-  areQuestionTitlesUnique,
+  areAnswerNamesUnique,
 } from '../typeGuards';
 // import { SimpleSurvey } from '..';
 
@@ -22,6 +22,7 @@ test('Test isSurvey and isQuestion', () => {
   const cb: CheckboxForm = {
     type: 'Checkbox',
     title: 'Test Checkbox 1',
+    answerName: 'cb1',
     description: 'description',
     possibleAnswers: ['yes', 'no'],
     isRequired: true,
@@ -36,6 +37,7 @@ test('Test isSurvey and isQuestion', () => {
   const cb2: CheckboxForm = {
     type: 'Checkbox',
     title: 'Test Checkbox 2',
+    answerName: 'cb2',
     description: 'description',
     possibleAnswers: ['yes', 'no'],
     isRequired: true,
@@ -60,6 +62,7 @@ test('Test isCheckbox typeGuard.', () => {
     description: 'description',
     possibleAnswers: ['yes', 'no'],
     isRequired: true,
+    answerName: 'cb1',
   };
   expect(isCheckbox(cb)).toBe(true);
   cb.userAnswer = ['yes', 'yes'];
@@ -82,6 +85,7 @@ test('Test isEmail typeGuard.', () => {
     title: 'Email test',
     description: 'description',
     isRequired: true,
+    answerName: 'a',
   };
   expect(isEmail(em)).toBe(true);
   em.userAnswer = 'mjs@mjs.com';
@@ -96,6 +100,7 @@ test('Test isNum typeGuard.', () => {
     title: 'Num test',
     description: 'description',
     isRequired: true,
+    answerName: 'a',
   };
   expect(isNum(num)).toBe(true);
   num.userAnswer = 1;
@@ -112,6 +117,7 @@ test('Test isRadio typeGuard.', () => {
     description: 'description',
     possibleAnswers: ['yes', 'no'],
     isRequired: true,
+    answerName: 'a',
   };
   expect(isRadio(radio)).toBe(true);
   radio.userAnswer = 'yes';
@@ -129,6 +135,7 @@ test('Test isRange typeGuard.', () => {
     title: 'Range test',
     description: 'description',
     isRequired: true,
+    answerName: 'a',
   } as RangeForm;
   expect(isRange(range)).toBe(false);
   range.min = 0;
@@ -153,6 +160,7 @@ test('Test isText typeGuard.', () => {
     title: 'Text test',
     description: 'description',
     isRequired: true,
+    answerName: 'a',
   };
   expect(isText(text)).toBe(true);
   text.userAnswer = 'yes';
@@ -168,6 +176,7 @@ test('Test isTime typeGuard.', () => {
     title: 'Time test',
     description: 'description',
     isRequired: true,
+    answerName: 'a',
   };
   expect(isTime(time)).toBe(true);
   time.userAnswer = '2018-06-21 12:55:59';
@@ -189,17 +198,20 @@ test('Test areQuestionTitlesUnique', () => {
         possibleAnswers: ['yes', 'no'],
         isRequired: false,
         showChildrenOn: true,
+        answerName: 'a',
         children: [
           {
             title: 'question 1',
             type: 'Email',
             isRequired: false,
             showChildrenOn: true,
+            answerName: 'a',
             children: [
               {
                 title: 'question 1',
                 type: 'Email',
                 isRequired: false,
+                answerName: 'a',
               },
             ],
           },
@@ -207,13 +219,14 @@ test('Test areQuestionTitlesUnique', () => {
             title: 'question 1',
             type: 'Email',
             isRequired: false,
+            answerName: 'a',
           },
         ],
       },
     ],
   };
 
-  expect(areQuestionTitlesUnique(survey1)).toBe(false);
+  expect(areAnswerNamesUnique(survey1)).toBe(false);
 
   const survey2: Survey = {
     name: 'Life Insurace',
@@ -224,29 +237,33 @@ test('Test areQuestionTitlesUnique', () => {
         possibleAnswers: ['yes', 'no'],
         isRequired: false,
         showChildrenOn: true,
+        answerName: 'a',
         children: [
           {
-            title: 'question 2',
+            title: 'question 1',
             type: 'Email',
             isRequired: false,
             showChildrenOn: true,
+            answerName: 'b',
             children: [
               {
-                title: 'question 3',
+                title: 'question 1',
                 type: 'Email',
                 isRequired: false,
+                answerName: 'c',
               },
             ],
           },
           {
-            title: 'question 4',
+            title: 'question 1',
             type: 'Email',
             isRequired: false,
+            answerName: 'd',
           },
         ],
       },
     ],
   };
 
-  expect(areQuestionTitlesUnique(survey2)).toBe(true);
+  expect(areAnswerNamesUnique(survey2)).toBe(true);
 });
