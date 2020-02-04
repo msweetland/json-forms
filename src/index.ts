@@ -18,60 +18,59 @@ export class SimpleSurvey {
   public survey = (): Survey => this._survey;
 
   public answerQuestion = (
-    questionIdx: number[],
+    questionIdxs: number[],
     answerType: FormTypes,
-    answer: AnswerType
+    answer: AnswerTypes
   ): void => {
-    // for each index check if valid sub index
-    // if (questionIdx >= 0 && questionIdx < this._survey.questions.length) {
-    //   // if answer type matches the answer type of the question
-    // } else {
-    //   throw Error('Question index out of range.');
-    // }
+    let questions: Question[] = this._survey.questions;
+    for (const idx of questionIdxs.splice(0, questionIdxs.length - 1)) {
+      if (questions[idx].children) {
+        questions = questions[idx].children as Question[];
+      } else {
+        throw Error('Answer Index out of range or no children present');
+      }
+    }
+
+    const lastIdx = questionIdxs[questionIdxs.length - 1];
+    if (questions[lastIdx]) {
+      if (questions[lastIdx].type === answerType) {
+        questions[lastIdx].userAnswer = answer;
+      } else {
+        throw Error('Answer types do not match.');
+      }
+    } else {
+      throw Error('Answer Index out of range or no children present.');
+    }
   };
 
   public isComplete = (): boolean => {
+    // const isCompletehelper = (quest: Question): boolean => {
+    //   const {userAnswer, children, showChildrenOn, isRequired} = quest;
+    //   // if question not answered and not required and doesn't have children return true
+    //   if (!userAnswer && !isRequired) {
+    //     return true;
+    //   }
 
-    const isCompletehelper = (quest: Question): boolean => {
-      const {userAnswer, children, showChildrenOn, isRequired} = quest;
-      // if question not answered and not required and doesn't have children return true
-      if (!userAnswer && !isRequired) {
-        return true;
-      }
+    //   // if answered and answer == showChildren and children check children
 
+    //   else if (children && )
 
+    //   else if (children) {
+    //     return
+    //   }
 
-      // if answered and answer == showChildren and children check children
+    //   if (userAnswer ) {
 
+    //   }
 
-      
-      
-      else if (children && )
-      
-      else if (children) {
-        return 
-      }
+    //   // check children if question is correct answer and has children
+    //   // if
+    //   if ( quest.isRequired)
+    // }
 
-
-      
-
-
-      
-      if (userAnswer ) {
-
-      }
-
-
-
-      // check children if question is correct answer and has children
-      // if 
-      if ( quest.isRequired) 
-    }
-
-    for (const question of this._survey.questions) {
-      question.
-    }
-
+    // for (const question of this._survey.questions) {
+    //   question.
+    // }
 
     //  get all possible questions
     // linked list traverse to see if question is end

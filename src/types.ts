@@ -7,13 +7,15 @@ type FormTypes =
   | 'Text'
   | 'Time';
 
+type AnswerTypes = number | string | string[];
+
 interface Question {
   type: FormTypes;
   title: string;
   isRequired: boolean;
   description?: string;
   possibleAnswers?: string[]; // used on MC
-  userAnswer?: number | string | string[];
+  userAnswer?: AnswerTypes;
   children?: Question[];
   showChildrenOn?: string[] | boolean; // true to show on any answer, string[] for multiple choice
   metadata?: string; // eslint-disable-line @typescript-eslint/no-explicit-any
