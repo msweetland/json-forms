@@ -25,7 +25,7 @@ interface CheckboxForm extends Question {
   type: 'Checkbox';
   possibleAnswers: string[];
   userAnswer?: string[];
-  showChildrenOn?: string[];
+  showChildrenOn?: string[] | boolean;
 }
 
 interface EmailForm extends Question {
@@ -44,7 +44,7 @@ interface RadioForm extends Question {
   type: 'Radio';
   possibleAnswers: string[];
   userAnswer?: string;
-  showChildrenOn?: string[];
+  showChildrenOn?: string[] | boolean;
 }
 
 interface RangeForm extends Question {

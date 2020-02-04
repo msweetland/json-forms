@@ -1,6 +1,6 @@
 import { isSurvey } from './typeGuards';
 
-export class SimpleSurvey {
+export class JsonForm {
   _survey: Survey;
   constructor(stringSurvey: string) {
     this._survey = this.parseSurveyString(stringSurvey);
@@ -13,6 +13,8 @@ export class SimpleSurvey {
     }
     throw Error('Not a valid survey.');
   }
+
+  static validateSurvey = (obj: object): boolean => isSurvey(obj);
 
   public stringSurvey = (): string => JSON.stringify(this._survey);
   public survey = (): Survey => this._survey;

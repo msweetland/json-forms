@@ -11,7 +11,7 @@ import {
 } from '../typeGuards';
 // import { SimpleSurvey } from '..';
 
-test('Validate isSurvey without questions', () => {
+test('Test isSurvey and isQuestion', () => {
   const survey: Survey = {
     name: 'test survey',
     questions: [],
@@ -41,7 +41,15 @@ test('Validate isSurvey without questions', () => {
   };
 
   survey.questions[0].children = [cb2];
-  expect(isSurvey(survey)).toBe(true);
+  expect(isSurvey(survey)).toBe(false);
+
+  cb.showChildrenOn = ['maybe'];
+  survey.questions[0] = cb;
+  expect(isSurvey(survey)).toBe(false);
+
+  cb.showChildrenOn = ['yes'];
+  survey.questions[0] = cb;
+  expect(isSurvey(survey)).toBe(false);
 });
 
 test('Test isCheckbox typeGuard.', () => {
@@ -127,7 +135,6 @@ test('Test isRange typeGuard.', () => {
   range.max = 0;
   expect(isRange(range)).toBe(false);
   range.max = 1;
-  console.log(range);
   expect(isRange(range)).toBe(true);
 
   range.userAnswer = 1;

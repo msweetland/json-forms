@@ -20,16 +20,15 @@ export const isCheckbox = (object: any): object is CheckboxForm => {
     return false;
   }
 
-  // validate show on answers
-  if (
-    object.showChildrenOn &&
-    typeof Array.isArray(object.showChildrenOn) &&
-    _.every(object, _.isString)
-  ) {
-    for (const answer of object.showChildrenOn) {
-      if (!_.includes(object.possibleAnswers as string[], answer as string)) {
-        return false;
+  if (object.showChildrenOn) {
+    if (Array.isArray(object.showChildrenOn) && _.every(object, _.isString)) {
+      for (const answer of object.showChildrenOn) {
+        if (!_.includes(object.possibleAnswers as string[], answer as string)) {
+          return false;
+        }
       }
+    } else if (typeof object.showChildrenOn !== 'boolean') {
+      return false;
     }
   }
 
@@ -102,15 +101,15 @@ export const isRadio = (object: any): object is RadioForm => {
     return false;
   }
 
-  if (
-    object.showChildrenOn &&
-    typeof Array.isArray(object.showChildrenOn) &&
-    _.every(object, _.isString)
-  ) {
-    for (const answer of object.showChildrenOn) {
-      if (!_.includes(object.possibleAnswers as string[], answer as string)) {
-        return false;
+  if (object.showChildrenOn) {
+    if (Array.isArray(object.showChildrenOn) && _.every(object, _.isString)) {
+      for (const answer of object.showChildrenOn) {
+        if (!_.includes(object.possibleAnswers as string[], answer as string)) {
+          return false;
+        }
       }
+    } else if (typeof object.showChildrenOn !== 'boolean') {
+      return false;
     }
   }
 
@@ -212,6 +211,14 @@ export const isQuestion = (object: any): object is Question => {
       isText(object)
     )
   ) {
+    return false;
+  }
+
+  if (object.children && !object.showChildrenOn) {
+    return false;
+  }
+
+  if (!object.children && object.showChildrenOn) {
     return false;
   }
 
