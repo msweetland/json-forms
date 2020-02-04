@@ -9,6 +9,8 @@ type FormTypes =
 
 type AnswerTypes = number | string | string[];
 
+type AnswerObj = { [key: string]: AnswerTypes | undefined };
+
 interface Question {
   type: FormTypes;
   title: string;

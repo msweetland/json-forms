@@ -52,7 +52,7 @@ test('Test isSurvey and isQuestion', () => {
 
   cb.showChildrenOn = ['yes'];
   survey.questions[0] = cb;
-  expect(isSurvey(survey)).toBe(false);
+  expect(isSurvey(survey)).toBe(true);
 });
 
 test('Test isCheckbox typeGuard.', () => {
@@ -77,6 +77,70 @@ test('Test isCheckbox typeGuard.', () => {
   const badAns = [1, 2, 3] as any;
   cb.possibleAnswers = badAns;
   expect(isCheckbox(cb)).toBe(false);
+  delete cb.userAnswer;
+  cb.possibleAnswers = ['yes', 'no'];
+
+  // children tests
+  cb.children = [
+    {
+      type: 'Checkbox',
+      title: 'Test Checkbox',
+      description: 'description',
+      possibleAnswers: ['yes', 'no'],
+      isRequired: true,
+      answerName: 'cb1',
+    },
+  ];
+  expect(isCheckbox(cb)).toBe(false);
+  cb.showChildrenOn = true;
+  expect(isCheckbox(cb)).toBe(true);
+
+  cb.showChildrenOn = ['yes'];
+  expect(isCheckbox(cb)).toBe(true);
+  cb.showChildrenOn = ['yes', 'no'];
+  expect(isCheckbox(cb)).toBe(true);
+});
+
+test('Test isRadio typeGuard.', () => {
+  const radio: RadioForm = {
+    type: 'Radio',
+    title: 'Radio test',
+    description: 'description',
+    possibleAnswers: ['yes', 'no'],
+    isRequired: true,
+    answerName: 'a',
+  };
+  expect(isRadio(radio)).toBe(true);
+  radio.userAnswer = 'yes';
+  expect(isRadio(radio)).toBe(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  radio.userAnswer = 1 as any;
+  expect(isRadio(radio)).toBe(false);
+  radio.userAnswer = 'negative';
+  expect(isRadio(radio)).toBe(false);
+  delete radio.userAnswer;
+
+  radio.children = [
+    {
+      type: 'Checkbox',
+      title: 'Test Checkbox',
+      description: 'description',
+      possibleAnswers: ['yes', 'no'],
+      isRequired: true,
+      answerName: 'cb1',
+    },
+  ];
+  expect(isRadio(radio)).toBe(false);
+
+  radio.showChildrenOn = true;
+  expect(isRadio(radio)).toBe(true);
+
+  radio.showChildrenOn = ['yes'];
+  expect(isRadio(radio)).toBe(true);
+  radio.showChildrenOn = ['yes', 'no'];
+  expect(isRadio(radio)).toBe(true);
+  radio.showChildrenOn = ['maybe'];
+  expect(isRadio(radio)).toBe(false);
 });
 
 test('Test isEmail typeGuard.', () => {
@@ -108,25 +172,6 @@ test('Test isNum typeGuard.', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   num.userAnswer = 'bad number' as any;
   expect(isNum(num)).toBe(false);
-});
-
-test('Test isRadio typeGuard.', () => {
-  const radio: RadioForm = {
-    type: 'Radio',
-    title: 'Radio test',
-    description: 'description',
-    possibleAnswers: ['yes', 'no'],
-    isRequired: true,
-    answerName: 'a',
-  };
-  expect(isRadio(radio)).toBe(true);
-  radio.userAnswer = 'yes';
-  expect(isRadio(radio)).toBe(true);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  radio.userAnswer = 1 as any;
-  expect(isRadio(radio)).toBe(false);
-  radio.userAnswer = 'negative';
-  expect(isRadio(radio)).toBe(false);
 });
 
 test('Test isRange typeGuard.', () => {

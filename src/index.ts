@@ -1,4 +1,5 @@
-import { isSurvey, isQuestion } from './typeGuards';
+import _ from 'lodash';
+import { isSurvey, isQuestion, isQuestionShowingChildren } from './typeGuards';
 
 export class JsonSurvey {
   _survey: Survey;
@@ -51,39 +52,29 @@ export class JsonSurvey {
     }
   };
 
-  public answers = (): { [key: string]: AnswerTypes } => ({});
+  public getAnswerObj = (): AnswerObj => {
+    const answers: AnswerObj = {};
+    const addAnswers = (quest: Question): void => {
+      answers[quest.answerName] = quest.userAnswer;
+      (quest.children || []).forEach(addAnswers);
+    };
+    this._survey.questions.forEach(addAnswers);
+    return answers;
+  };
 
   public isComplete = (): boolean => {
-    // const isCompletehelper = (quest: Question): boolean => {
-    //   const {userAnswer, children, showChildrenOn, isRequired} = quest;
-    //   // if question not answered and not required and doesn't have children return true
-    //   if (!userAnswer && !isRequired) {
-    //     return true;
-    //   }
+    const isQuestionComplete = (quest: Question): boolean => {
+      if (quest.isRequired && !quest.userAnswer) {
+        return false;
+      }
+      // is showing children check if children are required
+      if (quest.children && isQuestionShowingChildren(quest)) {
+        return _.every(quest.children.map(isQuestionComplete));
+      }
 
-    //   // if answered and answer == showChildren and children check children
+      return true;
+    };
 
-    //   else if (children && )
-
-    //   else if (children) {
-    //     return
-    //   }
-
-    //   if (userAnswer ) {
-
-    //   }
-
-    //   // check children if question is correct answer and has children
-    //   // if
-    //   if ( quest.isRequired)
-    // }
-
-    // for (const question of this._survey.questions) {
-    //   question.
-    // }
-
-    //  get all possible questions
-    // linked list traverse to see if question is end
-    return true;
+    return _.every(this._survey.questions.map(isQuestionComplete));
   };
 }

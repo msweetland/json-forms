@@ -8,7 +8,17 @@ const isPossibleAnswers = (obj: any): obj is string[] => {
   );
 };
 
-export const areAnswerNamesUnique = (obj: Survey): boolean => {
+export const isQuestionShowingChildren = (quest: Question): boolean => {
+  if (!quest.userAnswer) {
+    return false;
+  } else if (typeof quest.showChildrenOn === 'boolean') {
+    return quest.showChildrenOn;
+  } else {
+    return _.includes(quest.possibleAnswers, quest.userAnswer);
+  }
+};
+
+export const areAnswerNamesUnique = (surv: Survey): boolean => {
   const answerNames = new Set<string>();
   const isUniqueAnswerName = (quest: Question): boolean => {
     if (answerNames.has(quest.answerName)) {
@@ -24,7 +34,7 @@ export const areAnswerNamesUnique = (obj: Survey): boolean => {
     return true;
   };
 
-  return _.every(obj.questions.map(isUniqueAnswerName));
+  return _.every(surv.questions.map(isUniqueAnswerName));
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,8 +49,11 @@ export const isCheckbox = (object: any): object is CheckboxForm => {
     return false;
   }
 
-  if (object.showChildrenOn) {
-    if (Array.isArray(object.showChildrenOn) && _.every(object, _.isString)) {
+  if (object.children) {
+    if (
+      Array.isArray(object.showChildrenOn) &&
+      _.every(object.showChildrenOn, _.isString)
+    ) {
       for (const answer of object.showChildrenOn) {
         if (!_.includes(object.possibleAnswers as string[], answer as string)) {
           return false;
@@ -77,6 +90,38 @@ export const isCheckbox = (object: any): object is CheckboxForm => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isRadio = (object: any): object is RadioForm => {
+  if (object?.type !== 'Radio') {
+    return false;
+  }
+
+  // if user answers are not present
+  if (!isPossibleAnswers(object?.possibleAnswers)) {
+    return false;
+  }
+
+  if (object.children) {
+    if (
+      Array.isArray(object.showChildrenOn) &&
+      _.every(object.showChildrenOn, _.isString)
+    ) {
+      for (const answer of object.showChildrenOn) {
+        if (!_.includes(object.possibleAnswers as string[], answer as string)) {
+          return false;
+        }
+      }
+    } else if (typeof object.showChildrenOn !== 'boolean') {
+      return false;
+    }
+  }
+
+  return object.userAnswer
+    ? typeof object.userAnswer === 'string' &&
+        _.includes(object.possibleAnswers, object.userAnswer)
+    : typeof object.userAnswer === 'undefined';
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isEmail = (object: any): object is EmailForm => {
   if (object?.type !== 'Email') {
     return false;
@@ -106,35 +151,6 @@ export const isNum = (object: any): object is NumForm => {
 
   return object.userAnswer
     ? typeof object.userAnswer === 'number'
-    : typeof object.userAnswer === 'undefined';
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isRadio = (object: any): object is RadioForm => {
-  if (object?.type !== 'Radio') {
-    return false;
-  }
-
-  // if user answers are not present
-  if (!isPossibleAnswers(object?.possibleAnswers)) {
-    return false;
-  }
-
-  if (object.showChildrenOn) {
-    if (Array.isArray(object.showChildrenOn) && _.every(object, _.isString)) {
-      for (const answer of object.showChildrenOn) {
-        if (!_.includes(object.possibleAnswers as string[], answer as string)) {
-          return false;
-        }
-      }
-    } else if (typeof object.showChildrenOn !== 'boolean') {
-      return false;
-    }
-  }
-
-  return object.userAnswer
-    ? typeof object.userAnswer === 'string' &&
-        _.includes(object.possibleAnswers, object.userAnswer)
     : typeof object.userAnswer === 'undefined';
 };
 
@@ -224,6 +240,15 @@ export const isQuestion = (object: any): object is Question => {
     return false;
   }
 
+  if (object.children && !object.showChildrenOn) {
+    return false;
+  }
+
+  if (!object.children && object.showChildrenOn) {
+    return false;
+  }
+
+  // check children
   if (
     !(
       isCheckbox(object) ||
@@ -236,26 +261,6 @@ export const isQuestion = (object: any): object is Question => {
     )
   ) {
     return false;
-  }
-
-  if (object.children && !object.showChildrenOn) {
-    return false;
-  }
-
-  if (!object.children && object.showChildrenOn) {
-    return false;
-  }
-
-  if (object.children) {
-    if (Array.isArray(object.children) && object.children.length !== 0) {
-      for (const question of object.children) {
-        if (!isQuestion(question)) {
-          return false;
-        }
-      }
-    } else {
-      return false;
-    }
   }
   return true;
 };

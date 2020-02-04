@@ -1,6 +1,6 @@
 import { JsonSurvey } from '..';
 
-test('Test static validateSurvey in JsonForm', () => {
+test('Test static validateSurvey in JsonSurvey', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const testSurvey: any = {
     name: 'Life Insurace',
@@ -36,7 +36,7 @@ test('Test static validateSurvey in JsonForm', () => {
   expect(JsonSurvey.validateSurvey(testSurvey)).toEqual(false);
 });
 
-test('Test answerquestion in JsonForm', () => {
+test('Test answerquestion in JsonSurvey', () => {
   const surveyStr = JSON.stringify({
     name: 'Life Insurace',
     questions: [
@@ -146,4 +146,63 @@ test('Test answerquestion in JsonForm', () => {
       ],
     })
   );
+
+  expect(survey.getAnswerObj()).toEqual({
+    likesX: ['yes', 'no'],
+    email1: 'test@test.com',
+    email2: 'test@test.com',
+    email3: 'test@test.com',
+  });
+});
+
+test('Test isComplete in JsonSurvey', () => {
+  const survey: Survey = {
+    name: 'Life Insurace',
+    questions: [
+      {
+        title: 'Do you like',
+        type: 'Checkbox',
+        answerName: 'likesX',
+        possibleAnswers: ['yes', 'no'],
+        isRequired: false,
+        showChildrenOn: ['yes'],
+        children: [
+          {
+            title: 'User Email 1',
+            answerName: 'email1',
+            type: 'Email',
+            isRequired: true,
+            showChildrenOn: true,
+            children: [
+              {
+                title: 'User Email 2',
+                answerName: 'email2',
+                type: 'Email',
+                isRequired: false,
+              },
+            ],
+          },
+          {
+            title: 'User Email 3',
+            answerName: 'email3',
+            type: 'Email',
+            isRequired: false,
+          },
+        ],
+      },
+    ],
+  };
+
+  expect(() => new JsonSurvey(JSON.stringify(survey))).not.toThrow(Error);
+  let S = new JsonSurvey(JSON.stringify(survey));
+  expect(S.isComplete()).toEqual(true);
+
+  survey.questions[0].isRequired = true;
+  expect(() => new JsonSurvey(JSON.stringify(survey))).not.toThrow(Error);
+  S = new JsonSurvey(JSON.stringify(survey));
+  expect(S.isComplete()).toEqual(false);
+
+  expect(() => S.answerQuestion([0], 'Checkbox', ['yes'])).not.toThrow(Error);
+  console.log(survey);
+  expect(S.isComplete()).toEqual(false);
 });
