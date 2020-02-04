@@ -1,4 +1,4 @@
-import { JsonForm } from '..';
+import { JsonSurvey } from '..';
 
 test('Test static validateSurvey in JsonForm', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,13 +13,13 @@ test('Test static validateSurvey in JsonForm', () => {
         showChildrenOn: true,
         children: [
           {
-            title: 'question 1',
+            title: 'question 2',
             type: 'Checkbox',
             possibleAnswers: ['yes', 'no'],
             isRequired: false,
           },
           {
-            title: 'question 1',
+            title: 'question 3',
             type: 'Checkbox',
             possibleAnswers: ['yes', 'no'],
             isRequired: false,
@@ -28,9 +28,9 @@ test('Test static validateSurvey in JsonForm', () => {
       },
     ],
   };
-  expect(JsonForm.validateSurvey(testSurvey)).toEqual(true);
+  expect(JsonSurvey.validateSurvey(testSurvey)).toEqual(true);
   testSurvey.questions.push({});
-  expect(JsonForm.validateSurvey(testSurvey)).toEqual(false);
+  expect(JsonSurvey.validateSurvey(testSurvey)).toEqual(false);
 });
 
 test('Test answerquestion in JsonForm', () => {
@@ -38,27 +38,27 @@ test('Test answerquestion in JsonForm', () => {
     name: 'Life Insurace',
     questions: [
       {
-        title: 'question 1',
+        title: 'Do you like',
         type: 'Checkbox',
         possibleAnswers: ['yes', 'no'],
         isRequired: false,
         showChildrenOn: true,
         children: [
           {
-            title: 'question 1',
+            title: 'User Email 1',
             type: 'Email',
             isRequired: false,
             showChildrenOn: true,
             children: [
               {
-                title: 'question 1',
+                title: 'User Email 2',
                 type: 'Email',
                 isRequired: false,
               },
             ],
           },
           {
-            title: 'question 1',
+            title: 'User Email 3',
             type: 'Email',
             isRequired: false,
           },
@@ -67,9 +67,9 @@ test('Test answerquestion in JsonForm', () => {
     ],
   });
 
-  expect(() => new JsonForm(surveyStr)).not.toThrow(Error);
+  expect(() => new JsonSurvey(surveyStr)).not.toThrow(Error);
 
-  const survey = new JsonForm(surveyStr);
+  const survey = new JsonSurvey(surveyStr);
   expect(() => survey.answerQuestion([1], 'Email', 'test')).toThrow(Error);
   expect(() => survey.answerQuestion([0], 'Checkbox', 'test')).toThrow(Error);
   expect(() => survey.answerQuestion([0], 'Checkbox', ['yes'])).not.toThrow(
@@ -96,4 +96,43 @@ test('Test answerquestion in JsonForm', () => {
   expect(() =>
     survey.answerQuestion([0, 0, 0], 'Email', 'test@test.com')
   ).not.toThrow(Error);
+
+  expect(survey.stringSurvey()).toEqual(
+    JSON.stringify({
+      name: 'Life Insurace',
+      questions: [
+        {
+          title: 'Do you like',
+          type: 'Checkbox',
+          possibleAnswers: ['yes', 'no'],
+          isRequired: false,
+          showChildrenOn: true,
+          children: [
+            {
+              title: 'User Email 1',
+              type: 'Email',
+              isRequired: false,
+              showChildrenOn: true,
+              children: [
+                {
+                  title: 'User Email 2',
+                  type: 'Email',
+                  isRequired: false,
+                  userAnswer: 'test@test.com',
+                },
+              ],
+              userAnswer: 'test@test.com',
+            },
+            {
+              title: 'User Email 3',
+              type: 'Email',
+              isRequired: false,
+              userAnswer: 'test@test.com',
+            },
+          ],
+          userAnswer: ['yes', 'no'],
+        },
+      ],
+    })
+  );
 });

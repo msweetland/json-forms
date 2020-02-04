@@ -1,6 +1,6 @@
 import { isSurvey, isQuestion } from './typeGuards';
 
-export class JsonForm {
+export class JsonSurvey {
   _survey: Survey;
   constructor(stringSurvey: string) {
     this._survey = this.parseSurveyString(stringSurvey);
@@ -50,6 +50,8 @@ export class JsonForm {
       throw Error('Answer Index out of range or no children present.');
     }
   };
+
+  public answers = (): { [key: string]: AnswerTypes } => ({});
 
   public isComplete = (): boolean => {
     // const isCompletehelper = (quest: Question): boolean => {

@@ -8,6 +8,25 @@ const isPossibleAnswers = (obj: any): obj is string[] => {
   );
 };
 
+export const areQuestionTitlesUnique = (obj: Survey): boolean => {
+  const titles = new Set<string>();
+  const isUniqueTitle = (quest: Question): boolean => {
+    if (titles.has(quest.title)) {
+      return false;
+    } else {
+      titles.add(quest.title);
+    }
+
+    if (quest.children) {
+      const childrenUnique: boolean[] = quest.children.map(isUniqueTitle);
+      return _.every(childrenUnique);
+    }
+    return true;
+  };
+
+  return _.every(obj.questions.map(isUniqueTitle));
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isCheckbox = (object: any): object is CheckboxForm => {
   // check type is valid
@@ -254,5 +273,10 @@ export const isSurvey = (object: any): object is Survey => {
   } else {
     return false;
   }
+
+  if (!areQuestionTitlesUnique(object)) {
+    return false;
+  }
+
   return true;
 };

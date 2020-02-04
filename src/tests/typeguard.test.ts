@@ -8,6 +8,7 @@ import {
   isText,
   isTime,
   isRange,
+  areQuestionTitlesUnique,
 } from '../typeGuards';
 // import { SimpleSurvey } from '..';
 
@@ -20,7 +21,7 @@ test('Test isSurvey and isQuestion', () => {
   expect(isSurvey(survey)).toBe(false);
   const cb: CheckboxForm = {
     type: 'Checkbox',
-    title: 'Test Checkbox',
+    title: 'Test Checkbox 1',
     description: 'description',
     possibleAnswers: ['yes', 'no'],
     isRequired: true,
@@ -34,7 +35,7 @@ test('Test isSurvey and isQuestion', () => {
 
   const cb2: CheckboxForm = {
     type: 'Checkbox',
-    title: 'Test Checkbox',
+    title: 'Test Checkbox 2',
     description: 'description',
     possibleAnswers: ['yes', 'no'],
     isRequired: true,
@@ -176,4 +177,76 @@ test('Test isTime typeGuard.', () => {
   expect(isTime(time)).toBe(false);
   time.userAnswer = '2018-06-21 12:55:61';
   expect(isTime(time)).toBe(false);
+});
+
+test('Test areQuestionTitlesUnique', () => {
+  const survey1: Survey = {
+    name: 'Life Insurace',
+    questions: [
+      {
+        title: 'question 1',
+        type: 'Checkbox',
+        possibleAnswers: ['yes', 'no'],
+        isRequired: false,
+        showChildrenOn: true,
+        children: [
+          {
+            title: 'question 1',
+            type: 'Email',
+            isRequired: false,
+            showChildrenOn: true,
+            children: [
+              {
+                title: 'question 1',
+                type: 'Email',
+                isRequired: false,
+              },
+            ],
+          },
+          {
+            title: 'question 1',
+            type: 'Email',
+            isRequired: false,
+          },
+        ],
+      },
+    ],
+  };
+
+  expect(areQuestionTitlesUnique(survey1)).toBe(false);
+
+  const survey2: Survey = {
+    name: 'Life Insurace',
+    questions: [
+      {
+        title: 'question 1',
+        type: 'Checkbox',
+        possibleAnswers: ['yes', 'no'],
+        isRequired: false,
+        showChildrenOn: true,
+        children: [
+          {
+            title: 'question 2',
+            type: 'Email',
+            isRequired: false,
+            showChildrenOn: true,
+            children: [
+              {
+                title: 'question 3',
+                type: 'Email',
+                isRequired: false,
+              },
+            ],
+          },
+          {
+            title: 'question 4',
+            type: 'Email',
+            isRequired: false,
+          },
+        ],
+      },
+    ],
+  };
+
+  expect(areQuestionTitlesUnique(survey2)).toBe(true);
 });
