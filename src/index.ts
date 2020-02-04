@@ -1,4 +1,4 @@
-import { isSurvey } from './typeGuards';
+import { isSurvey, isQuestion } from './typeGuards';
 
 export class JsonForm {
   _survey: Survey;
@@ -35,11 +35,17 @@ export class JsonForm {
 
     const lastIdx = questionIdxs[questionIdxs.length - 1];
     if (questions[lastIdx]) {
-      if (questions[lastIdx].type === answerType) {
-        questions[lastIdx].userAnswer = answer;
-      } else {
+      const clone = JSON.parse(JSON.stringify(questions[lastIdx])) as Question;
+      if (clone.type !== answerType) {
         throw Error('Answer types do not match.');
       }
+
+      clone.userAnswer = answer;
+      if (!isQuestion(clone)) {
+        throw Error('Invalid answer.');
+      }
+
+      questions[lastIdx] = clone;
     } else {
       throw Error('Answer Index out of range or no children present.');
     }
