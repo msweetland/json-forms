@@ -5,6 +5,7 @@ import {
   isEmailForm,
   isNumForm,
   isRadioForm,
+  isRangeForm,
   isTextForm,
   isTimeForm,
 } from '../typeGuards';
@@ -52,6 +53,8 @@ test('Test isQuestion', () => {
 
   working.showChildrenOn = true;
   expect(isQuestion(working)).toEqual(true);
+
+  expect(() => isQuestion({ ...working, children: [{}, {}] })).toThrow(Error);
 
   working.showChildrenOn = false;
   expect(() => isQuestion(working)).toThrow(Error);
@@ -197,6 +200,24 @@ test('Test isRadioForm', () => {
   working.possibleAnswers = ['1', '2', '3'];
   working.answer = undefined;
   expect(isRadioForm(working)).toEqual(true);
+});
+
+test('Test isRangeForm', () => {
+  const working: RangeForm = {
+    type: 'Range',
+    title: 'Title',
+    isRequired: true,
+    min: 0,
+    max: 10,
+  };
+  expect(isRangeForm(working)).toEqual(true);
+  expect(() => isRangeForm({ ...working, unkown: true })).toThrow(Error);
+  expect(() => isRangeForm({ ...working, answer: 'string' })).toThrow(Error);
+  expect(() => isRangeForm({ ...working, answer: '420' })).toThrow(Error);
+  expect(isRangeForm({ ...working, answer: '0' })).toEqual(true);
+  expect(isRangeForm({ ...working, answer: 10 })).toEqual(true);
+  expect(isRangeForm({ ...working, answer: 5 })).toEqual(true);
+  expect(() => isRangeForm({ ...working, min: 10, max: 0 })).toThrow(Error);
 });
 
 test('Test isTextForm', () => {

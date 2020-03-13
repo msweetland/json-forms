@@ -155,6 +155,33 @@ export const isRadioForm = (object: any): object is RadioForm => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isRangeForm = (object: any): object is RangeForm => {
+  const schema = questionSchema
+    .append({
+      type: Joi.string().equal('Range'),
+      showChildrenOn: Joi.boolean().valid(true),
+      min: Joi.number()
+        .less(object.max)
+        .required(),
+      max: Joi.number()
+        .greater(object.min)
+        .required(),
+      answer: Joi.number()
+        .optional()
+        .min(object.min)
+        .max(object.max),
+    })
+    .unknown(false);
+
+  const { error } = Joi.validate(object, schema);
+  if (error) {
+    throw Error(error.details[0].message);
+  }
+
+  return true;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isTextForm = (object: any): object is TextForm => {
   const schema = questionSchema
     .append({
@@ -187,6 +214,60 @@ export const isTimeForm = (object: any): object is TimeForm => {
     throw Error(error.details[0].message);
   }
 
+  return true;
+};
+
+export const isForm = (object: any): object is Form => {
+  // recursive chech questions
+
+  const schema = Joi.object({
+    questions: Joi.array()
+      .items(questionSchema)
+      .required(),
+    answers: Joi.object().pattern(
+      /^/,
+      Joi.alternatives().try(
+        Joi.string(),
+        Joi.array()
+          .min(1)
+          .unique()
+          .items(Joi.string()),
+        Joi.number()
+      )
+    ),
+  }).unknown(true);
+
+  const { error } = Joi.validate(object, schema);
+  if (error) {
+    throw Error(error.details[0].message);
+  }
+
+  const validateQuestion = (q: Question): boolean => {
+    if (q.children) {
+      q.children.forEach(validateQuestion);
+    }
+
+    switch (q.type) {
+      case 'Checkbox':
+        return isCheckboxForm(q);
+      case 'Email':
+        return isEmailForm(q);
+      case 'Num':
+        return isNumForm(q);
+      case 'Radio':
+        return isRadioForm(q);
+      // case 'Range':
+      //   retur
+      case 'Text':
+        return isTextForm(q);
+      case 'Time':
+        return isTimeForm(q);
+      default:
+        throw new Error('Invalid Question Type');
+    }
+  };
+
+  object.questions.forEach(validateQuestion);
   return true;
 };
 

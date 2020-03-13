@@ -1,5 +1,4 @@
 // import _ from 'lodash';
-import { isSurvey, isQuestion, isQuestionShowingChildren } from './typeGuards';
 
 export class JSONForm {
   form: Form;
@@ -14,7 +13,6 @@ export class JSONForm {
     if (isSurvey(survey)) {
       return survey;
     }
-    throw Error('Not a valid survey.');
   }
 
   // public stringSurvey = (): string => JSON.stringify(this._survey);

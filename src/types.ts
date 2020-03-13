@@ -63,6 +63,6 @@ interface TimeForm extends Question {
 }
 
 type Form = {
-  schema: Question[];
-  data: { [key: string]: string | string[] | number };
+  questions: Question[];
+  answers?: { [key: string]: string | string[] | number };
 };
