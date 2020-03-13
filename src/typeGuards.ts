@@ -87,10 +87,48 @@ export const isCheckboxForm = (object: any): object is CheckboxForm => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isEmailForm = (object: any): object is EmailForm => {
+  const schema = questionSchema
+    .append({
+      type: Joi.string().equal('Email'),
+      showChildrenOn: Joi.boolean().valid(true),
+      answer: Joi.string()
+        .email()
+        .optional(),
+    })
+    .unknown(false);
+
+  const { error } = Joi.validate(object, schema);
+  if (error) {
+    throw Error(error.details[0].message);
+  }
+
+  return true;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isNumForm = (object: any): object is NumForm => {
+  const schema = questionSchema
+    .append({
+      type: Joi.string().equal('Num'),
+      showChildrenOn: Joi.boolean().valid(true),
+      answer: Joi.number().optional(),
+    })
+    .unknown(false);
+
+  const { error } = Joi.validate(object, schema);
+  if (error) {
+    throw Error(error.details[0].message);
+  }
+
+  return true;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isRadioForm = (object: any): object is RadioForm => {
   const schema = questionSchema
     .append({
-      type: Joi.string().equal('Checkbox'),
+      type: Joi.string().equal('Radio'),
       possibleAnswers: Joi.array()
         .min(1)
         .unique()
@@ -105,6 +143,42 @@ export const isRadioForm = (object: any): object is RadioForm => {
       answer: Joi.string()
         .equal(...object.possibleAnswers)
         .optional(),
+    })
+    .unknown(false);
+
+  const { error } = Joi.validate(object, schema);
+  if (error) {
+    throw Error(error.details[0].message);
+  }
+
+  return true;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isTextForm = (object: any): object is TextForm => {
+  const schema = questionSchema
+    .append({
+      type: Joi.string().equal('Text'),
+      showChildrenOn: Joi.boolean().valid(true),
+      answer: Joi.string().optional(),
+    })
+    .unknown(false);
+
+  const { error } = Joi.validate(object, schema);
+  if (error) {
+    throw Error(error.details[0].message);
+  }
+
+  return true;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isTimeForm = (object: any): object is TimeForm => {
+  const schema = questionSchema
+    .append({
+      type: Joi.string().equal('Time'),
+      showChildrenOn: Joi.boolean().valid(true),
+      answer: Joi.date(),
     })
     .unknown(false);
 

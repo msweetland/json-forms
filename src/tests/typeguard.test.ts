@@ -1,18 +1,13 @@
-// // import { SimpleSurvey } from '../index';
-// import {
-//   isSurvey,
-//   isCheckbox,
-//   isEmail,
-//   isNum,
-//   isRadio,
-//   isText,
-//   isTime,
-//   isRange,
-//   areAnswerNamesUnique,
-// } from '../typeGuards';
-// // import { SimpleSurvey } from '..';
-
-import { isFormType, isQuestion, isCheckboxForm } from '../typeGuards';
+import {
+  isFormType,
+  isQuestion,
+  isCheckboxForm,
+  isEmailForm,
+  isNumForm,
+  isRadioForm,
+  isTextForm,
+  isTimeForm,
+} from '../typeGuards';
 
 test('Test isFormType', () => {
   expect(() => isFormType('bad')).toThrow(Error);
@@ -118,4 +113,120 @@ test('Test isCheckboxForm', () => {
   working.possibleAnswers = ['1', '2', '3'];
   working.answer = ['3', '2'];
   expect(isCheckboxForm(working)).toEqual(true);
+});
+
+test('Test isEmailForm', () => {
+  const working: EmailForm = {
+    type: 'Email',
+    title: 'Title',
+    isRequired: true,
+  };
+
+  expect(isEmailForm(working)).toEqual(true);
+  expect(() => isEmailForm({ ...working, unkown: true })).toThrow(Error);
+
+  working.answer = 'not an email';
+  expect(() => isEmailForm(working)).toThrow(Error);
+
+  working.answer = 'msweetland@msweetland.com';
+  expect(isEmailForm(working)).toEqual(true);
+});
+
+test('Test isNumForm', () => {
+  const working: NumForm = {
+    type: 'Num',
+    title: 'Title',
+    isRequired: true,
+  };
+  expect(isNumForm(working)).toEqual(true);
+  expect(() => isNumForm({ ...working, unkown: true })).toThrow(Error);
+  expect(() => isNumForm({ ...working, answer: 'string' })).toThrow(Error);
+  expect(isNumForm({ ...working, answer: '420' })).toEqual(true);
+  expect(isNumForm({ ...working, answer: '-420' })).toEqual(true);
+  expect(isNumForm({ ...working, answer: 420 })).toEqual(true);
+  expect(isNumForm({ ...working, answer: -420 })).toEqual(true);
+});
+
+test('Test isRadioForm', () => {
+  const working: RadioForm = {
+    type: 'Radio',
+    title: 'Title',
+    isRequired: true,
+    possibleAnswers: ['eat'],
+  };
+
+  expect(isRadioForm(working)).toEqual(true);
+  expect(() => isRadioForm({ ...working, unkown: true })).toThrow(Error);
+
+  working.children = [{ ...working }];
+
+  // no showChildrenOn
+  expect(() => isRadioForm(working)).toThrow(Error);
+
+  working.showChildrenOn = true;
+  expect(isRadioForm(working)).toEqual(true);
+
+  working.showChildrenOn = false;
+  expect(() => isRadioForm(working)).toThrow(Error);
+
+  working.showChildrenOn = [];
+  expect(() => isRadioForm(working)).toThrow(Error);
+
+  working.showChildrenOn = ['qwerty'];
+  expect(() => isRadioForm(working)).toThrow(Error);
+
+  working.showChildrenOn = ['eat'];
+  expect(isRadioForm(working)).toEqual(true);
+
+  working.showChildrenOn = ['qwerty', 'eat'];
+  expect(() => isRadioForm(working)).toThrow(Error);
+
+  working.showChildrenOn = undefined;
+  working.children = undefined;
+
+  working.possibleAnswers = ['eat'];
+  working.answer = 'eat';
+  expect(isRadioForm(working)).toEqual(true);
+
+  working.possibleAnswers = ['eat', 'eat'];
+  working.answer = 'eat';
+  expect(() => isRadioForm(working)).toThrow(Error);
+
+  expect(() => isRadioForm({ ...working, answer: ['eat'] })).toThrow(Error);
+
+  working.possibleAnswers = ['1', '2', '3'];
+  working.answer = undefined;
+  expect(isRadioForm(working)).toEqual(true);
+});
+
+test('Test isTextForm', () => {
+  const working: TextForm = {
+    type: 'Text',
+    title: 'Title',
+    isRequired: true,
+  };
+
+  expect(isTextForm(working)).toEqual(true);
+  expect(() => isTextForm({ ...working, unkown: true })).toThrow(Error);
+
+  working.answer = 'not an email';
+  expect(isTextForm(working)).toEqual(true);
+
+  working.answer = 'msweetland@msweetland.com';
+  expect(isTextForm(working)).toEqual(true);
+});
+
+test('Test isTimeForm', () => {
+  const working: TimeForm = {
+    type: 'Time',
+    title: 'Title',
+    isRequired: true,
+  };
+  expect(isTimeForm(working)).toEqual(true);
+  expect(() => isTimeForm({ ...working, unkown: true })).toThrow(Error);
+  expect(() => isTimeForm({ ...working, answer: 'string' })).toThrow(Error);
+
+  const now = new Date();
+  expect(isTimeForm({ ...working, answer: now.getTime() })).toEqual(true);
+  expect(isTimeForm({ ...working, answer: now })).toEqual(true);
 });
