@@ -16,6 +16,7 @@
   "repository": "https://github.com/msweetland/simple-hash-auth",
   "devDependencies": {
     "@types/jest": "^25.1.1",
+    "@types/joi": "^14.3.4",
     "@types/lodash": "^4.14.149",
     "@types/node": "^13.5.3",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
@@ -35,6 +36,7 @@
     }
   },
   "dependencies": {
+    "joi": "^14.3.1",
     "lodash": "^4.17.15",
     "moment": "^2.24.0"
   }

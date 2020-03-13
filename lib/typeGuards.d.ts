@@ -1,6 +1,12 @@
-export declare const isCheckbox: (object: any) => object is Checkbox;
-export declare const isEmail: (object: any) => object is Email;
-export declare const isNum: (object: any) => object is Email;
-export declare const isRadio: (object: any) => object is Email;
+export declare const isQuestionShowingChildren: (quest: Question) => boolean;
+export declare const areAnswerNamesUnique: (surv: Survey) => boolean;
+export declare const isCheckbox: (object: any) => object is CheckboxForm;
+export declare const isRadio: (object: any) => object is RadioForm;
+export declare const isEmail: (object: any) => object is EmailForm;
+export declare const isNum: (object: any) => object is NumForm;
+export declare const isRange: (object: any) => object is RangeForm;
+export declare const isText: (object: any) => object is TextForm;
+export declare const isTime: (object: any) => object is TextForm;
+export declare const isQuestion: (object: any) => object is Question;
 export declare const isSurvey: (object: any) => object is Survey;
 //# sourceMappingURL=typeGuards.d.ts.map

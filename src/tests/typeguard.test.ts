@@ -1,314 +1,121 @@
-// import { SimpleSurvey } from '../index';
-import {
-  isSurvey,
-  isCheckbox,
-  isEmail,
-  isNum,
-  isRadio,
-  isText,
-  isTime,
-  isRange,
-  areAnswerNamesUnique,
-} from '../typeGuards';
-// import { SimpleSurvey } from '..';
+// // import { SimpleSurvey } from '../index';
+// import {
+//   isSurvey,
+//   isCheckbox,
+//   isEmail,
+//   isNum,
+//   isRadio,
+//   isText,
+//   isTime,
+//   isRange,
+//   areAnswerNamesUnique,
+// } from '../typeGuards';
+// // import { SimpleSurvey } from '..';
 
-test('Test isSurvey and isQuestion', () => {
-  const survey: Survey = {
-    name: 'test survey',
-    questions: [],
+import { isFormType, isQuestion, isCheckboxForm } from '../typeGuards';
+
+test('Test isFormType', () => {
+  expect(() => isFormType('bad')).toThrow(Error);
+  expect(() => isFormType('checkbox')).toThrow(Error);
+  expect(isFormType('Checkbox')).toEqual(true);
+  expect(isFormType('Email')).toEqual(true);
+  expect(isFormType('Num')).toEqual(true);
+  expect(isFormType('Radio')).toEqual(true);
+  expect(isFormType('Range')).toEqual(true);
+  expect(isFormType('Text')).toEqual(true);
+  expect(isFormType('Time')).toEqual(true);
+});
+
+test('Test isQuestion', () => {
+  expect(() => isQuestion({})).toThrow(Error);
+
+  const badType = {
+    type: 'checkbox',
   };
+  expect(() => isQuestion(badType)).toThrow(Error);
 
-  expect(isSurvey(survey)).toBe(false);
-  const cb: CheckboxForm = {
+  const noIsRequired = {
     type: 'Checkbox',
-    title: 'Test Checkbox 1',
-    answerName: 'cb1',
-    description: 'description',
-    possibleAnswers: ['yes', 'no'],
-    isRequired: true,
+    title: 'Title',
   };
+  expect(() => isQuestion(noIsRequired)).toThrow(Error);
 
-  survey.questions.push(cb);
-  expect(isSurvey(survey)).toBe(true);
-
-  survey.questions[0].children = [];
-  expect(isSurvey(survey)).toBe(false);
-
-  const cb2: CheckboxForm = {
+  const working: Question = {
     type: 'Checkbox',
-    title: 'Test Checkbox 2',
-    answerName: 'cb2',
-    description: 'description',
-    possibleAnswers: ['yes', 'no'],
+    title: 'Title',
     isRequired: true,
   };
+  expect(isQuestion(working)).toEqual(true);
 
-  survey.questions[0].children = [cb2];
-  expect(isSurvey(survey)).toBe(false);
+  // Unkown key
+  expect(isQuestion({ ...working, unkown: true })).toEqual(true);
 
-  cb.showChildrenOn = ['maybe'];
-  survey.questions[0] = cb;
-  expect(isSurvey(survey)).toBe(false);
+  working.children = [{ ...working }, { ...working }];
 
-  cb.showChildrenOn = ['yes'];
-  survey.questions[0] = cb;
-  expect(isSurvey(survey)).toBe(true);
+  // no showChildrenOn
+  expect(() => isQuestion(working)).toThrow(Error);
+
+  working.showChildrenOn = true;
+  expect(isQuestion(working)).toEqual(true);
+
+  working.showChildrenOn = false;
+  expect(() => isQuestion(working)).toThrow(Error);
+
+  working.showChildrenOn = [];
+  expect(() => isQuestion(working)).toThrow(Error);
+
+  working.showChildrenOn = ['qwerty'];
+  expect(isQuestion(working)).toEqual(true);
 });
 
-test('Test isCheckbox typeGuard.', () => {
-  const cb: CheckboxForm = {
+test('Test isCheckboxForm', () => {
+  expect(() => isCheckboxForm({})).toThrow(Error);
+
+  const working: CheckboxForm = {
     type: 'Checkbox',
-    title: 'Test Checkbox',
-    description: 'description',
-    possibleAnswers: ['yes', 'no'],
+    title: 'Title',
     isRequired: true,
-    answerName: 'cb1',
-  };
-  expect(isCheckbox(cb)).toBe(true);
-  cb.userAnswer = ['yes', 'yes'];
-  expect(isCheckbox(cb)).toBe(false);
-  cb.userAnswer = ['yes', 'no'];
-  expect(isCheckbox(cb)).toBe(true);
-  cb.userAnswer = [];
-  expect(isCheckbox(cb)).toBe(false);
-  cb.possibleAnswers = [];
-  expect(isCheckbox(cb)).toBe(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const badAns = [1, 2, 3] as any;
-  cb.possibleAnswers = badAns;
-  expect(isCheckbox(cb)).toBe(false);
-  delete cb.userAnswer;
-  cb.possibleAnswers = ['yes', 'no'];
-
-  // children tests
-  cb.children = [
-    {
-      type: 'Checkbox',
-      title: 'Test Checkbox',
-      description: 'description',
-      possibleAnswers: ['yes', 'no'],
-      isRequired: true,
-      answerName: 'cb1',
-    },
-  ];
-  expect(isCheckbox(cb)).toBe(false);
-  cb.showChildrenOn = true;
-  expect(isCheckbox(cb)).toBe(true);
-
-  cb.showChildrenOn = ['yes'];
-  expect(isCheckbox(cb)).toBe(true);
-  cb.showChildrenOn = ['yes', 'no'];
-  expect(isCheckbox(cb)).toBe(true);
-});
-
-test('Test isRadio typeGuard.', () => {
-  const radio: RadioForm = {
-    type: 'Radio',
-    title: 'Radio test',
-    description: 'description',
-    possibleAnswers: ['yes', 'no'],
-    isRequired: true,
-    answerName: 'a',
-  };
-  expect(isRadio(radio)).toBe(true);
-  radio.userAnswer = 'yes';
-  expect(isRadio(radio)).toBe(true);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  radio.userAnswer = 1 as any;
-  expect(isRadio(radio)).toBe(false);
-  radio.userAnswer = 'negative';
-  expect(isRadio(radio)).toBe(false);
-  delete radio.userAnswer;
-
-  radio.children = [
-    {
-      type: 'Checkbox',
-      title: 'Test Checkbox',
-      description: 'description',
-      possibleAnswers: ['yes', 'no'],
-      isRequired: true,
-      answerName: 'cb1',
-    },
-  ];
-  expect(isRadio(radio)).toBe(false);
-
-  radio.showChildrenOn = true;
-  expect(isRadio(radio)).toBe(true);
-
-  radio.showChildrenOn = ['yes'];
-  expect(isRadio(radio)).toBe(true);
-  radio.showChildrenOn = ['yes', 'no'];
-  expect(isRadio(radio)).toBe(true);
-  radio.showChildrenOn = ['maybe'];
-  expect(isRadio(radio)).toBe(false);
-});
-
-test('Test isEmail typeGuard.', () => {
-  const em: EmailForm = {
-    type: 'Email',
-    title: 'Email test',
-    description: 'description',
-    isRequired: true,
-    answerName: 'a',
-  };
-  expect(isEmail(em)).toBe(true);
-  em.userAnswer = 'mjs@mjs.com';
-  expect(isEmail(em)).toBe(true);
-  em.userAnswer = 'bad email';
-  expect(isEmail(em)).toBe(false);
-});
-
-test('Test isNum typeGuard.', () => {
-  const num: NumForm = {
-    type: 'Num',
-    title: 'Num test',
-    description: 'description',
-    isRequired: true,
-    answerName: 'a',
-  };
-  expect(isNum(num)).toBe(true);
-  num.userAnswer = 1;
-  expect(isNum(num)).toBe(true);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  num.userAnswer = 'bad number' as any;
-  expect(isNum(num)).toBe(false);
-});
-
-test('Test isRange typeGuard.', () => {
-  const range = {
-    type: 'Range',
-    title: 'Range test',
-    description: 'description',
-    isRequired: true,
-    answerName: 'a',
-  } as RangeForm;
-  expect(isRange(range)).toBe(false);
-  range.min = 0;
-  expect(isRange(range)).toBe(false);
-  range.max = 0;
-  expect(isRange(range)).toBe(false);
-  range.max = 1;
-  expect(isRange(range)).toBe(true);
-
-  range.userAnswer = 1;
-  expect(isRange(range)).toBe(true);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  range.userAnswer = 'negative' as any;
-  expect(isRange(range)).toBe(false);
-  range.userAnswer = 2;
-  expect(isRange(range)).toBe(false);
-});
-
-test('Test isText typeGuard.', () => {
-  const text: TextForm = {
-    type: 'Text',
-    title: 'Text test',
-    description: 'description',
-    isRequired: true,
-    answerName: 'a',
-  };
-  expect(isText(text)).toBe(true);
-  text.userAnswer = 'yes';
-  expect(isText(text)).toBe(true);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  text.userAnswer = 1 as any;
-  expect(isText(text)).toBe(false);
-});
-
-test('Test isTime typeGuard.', () => {
-  const time: TimeForm = {
-    type: 'Time',
-    title: 'Time test',
-    description: 'description',
-    isRequired: true,
-    answerName: 'a',
-  };
-  expect(isTime(time)).toBe(true);
-  time.userAnswer = '2018-06-21 12:55:59';
-  expect(isTime(time)).toBe(true);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  time.userAnswer = 1 as any;
-  expect(isTime(time)).toBe(false);
-  time.userAnswer = '2018-06-21 12:55:61';
-  expect(isTime(time)).toBe(false);
-});
-
-test('Test areQuestionTitlesUnique', () => {
-  const survey1: Survey = {
-    name: 'Life Insurace',
-    questions: [
-      {
-        title: 'question 1',
-        type: 'Checkbox',
-        possibleAnswers: ['yes', 'no'],
-        isRequired: false,
-        showChildrenOn: true,
-        answerName: 'a',
-        children: [
-          {
-            title: 'question 1',
-            type: 'Email',
-            isRequired: false,
-            showChildrenOn: true,
-            answerName: 'a',
-            children: [
-              {
-                title: 'question 1',
-                type: 'Email',
-                isRequired: false,
-                answerName: 'a',
-              },
-            ],
-          },
-          {
-            title: 'question 1',
-            type: 'Email',
-            isRequired: false,
-            answerName: 'a',
-          },
-        ],
-      },
-    ],
+    possibleAnswers: ['eat'],
   };
 
-  expect(areAnswerNamesUnique(survey1)).toBe(false);
+  expect(isCheckboxForm(working)).toEqual(true);
+  expect(() => isCheckboxForm({ ...working, unkown: true })).toThrow(Error);
 
-  const survey2: Survey = {
-    name: 'Life Insurace',
-    questions: [
-      {
-        title: 'question 1',
-        type: 'Checkbox',
-        possibleAnswers: ['yes', 'no'],
-        isRequired: false,
-        showChildrenOn: true,
-        answerName: 'a',
-        children: [
-          {
-            title: 'question 1',
-            type: 'Email',
-            isRequired: false,
-            showChildrenOn: true,
-            answerName: 'b',
-            children: [
-              {
-                title: 'question 1',
-                type: 'Email',
-                isRequired: false,
-                answerName: 'c',
-              },
-            ],
-          },
-          {
-            title: 'question 1',
-            type: 'Email',
-            isRequired: false,
-            answerName: 'd',
-          },
-        ],
-      },
-    ],
-  };
+  working.children = [{ ...working }];
 
-  expect(areAnswerNamesUnique(survey2)).toBe(true);
+  // no showChildrenOn
+  expect(() => isCheckboxForm(working)).toThrow(Error);
+
+  working.showChildrenOn = true;
+  expect(isCheckboxForm(working)).toEqual(true);
+
+  working.showChildrenOn = false;
+  expect(() => isCheckboxForm(working)).toThrow(Error);
+
+  working.showChildrenOn = [];
+  expect(() => isCheckboxForm(working)).toThrow(Error);
+
+  working.showChildrenOn = ['qwerty'];
+  expect(() => isCheckboxForm(working)).toThrow(Error);
+
+  working.showChildrenOn = ['eat'];
+  expect(isCheckboxForm(working)).toEqual(true);
+
+  working.showChildrenOn = ['qwerty', 'eat'];
+  expect(() => isCheckboxForm(working)).toThrow(Error);
+
+  working.showChildrenOn = undefined;
+  working.children = undefined;
+
+  working.possibleAnswers = ['eat'];
+  working.answer = ['eat'];
+  expect(isCheckboxForm(working)).toEqual(true);
+
+  working.possibleAnswers = ['eat'];
+  working.answer = ['eat', 'eat'];
+  expect(() => isCheckboxForm(working)).toThrow(Error);
+
+  working.possibleAnswers = ['1', '2', '3'];
+  working.answer = ['3', '2'];
+  expect(isCheckboxForm(working)).toEqual(true);
 });

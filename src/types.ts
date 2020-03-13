@@ -1,4 +1,4 @@
-type FormTypes =
+type FormType =
   | 'Checkbox'
   | 'Email'
   | 'Num'
@@ -7,46 +7,38 @@ type FormTypes =
   | 'Text'
   | 'Time';
 
-type AnswerTypes = number | string | string[];
-
-type AnswerObj = { [key: string]: AnswerTypes | undefined };
-
 interface Question {
-  type: FormTypes;
+  type: FormType;
   title: string;
-  answerName: string;
-  isRequired: boolean;
   description?: string;
-  possibleAnswers?: string[]; // used on MC
-  userAnswer?: AnswerTypes;
+  isRequired: boolean;
   children?: Question[];
-  showChildrenOn?: string[] | boolean; // true to show on any answer, string[] for multiple choice
-  metadata?: string; // eslint-disable-line @typescript-eslint/no-explicit-any
+  showChildrenOn?: string[] | boolean;
 }
 
 interface CheckboxForm extends Question {
   type: 'Checkbox';
   possibleAnswers: string[];
-  userAnswer?: string[];
+  answer?: string[];
   showChildrenOn?: string[] | boolean;
 }
 
 interface EmailForm extends Question {
   type: 'Email';
-  userAnswer?: string;
   showChildrenOn?: boolean;
+  answer?: string;
 }
 
 interface NumForm extends Question {
   type: 'Num';
-  userAnswer?: number;
   showChildrenOn?: boolean;
+  answer?: number;
 }
 
 interface RadioForm extends Question {
   type: 'Radio';
   possibleAnswers: string[];
-  userAnswer?: string;
+  answer?: string;
   showChildrenOn?: string[] | boolean;
 }
 
@@ -54,24 +46,23 @@ interface RangeForm extends Question {
   type: 'Range';
   min: number;
   max: number;
-  userAnswer?: number;
+  answer?: number;
   showChildrenOn?: boolean;
 }
 
 interface TextForm extends Question {
   type: 'Text';
-  userAnswer?: string;
+  answer?: string;
   showChildrenOn?: boolean;
 }
 
 interface TimeForm extends Question {
   type: 'Time';
-  userAnswer?: string; // SQL Timestamp
+  answer?: number;
   showChildrenOn?: boolean;
 }
 
-interface Survey {
-  questions: Question[];
-  name: string;
-  metadata?: string;
-}
+type Form = {
+  schema: Question[];
+  data: { [key: string]: string | string[] | number };
+};

@@ -1,49 +1,62 @@
 declare type FormTypes = 'Checkbox' | 'Email' | 'Num' | 'Radio' | 'Range' | 'Text' | 'Time';
-declare type AnswerType = number | string | string[];
+declare type AnswerTypes = number | string | string[];
+declare type AnswerObj = {
+    [key: string]: AnswerTypes | undefined;
+};
 interface Question {
     type: FormTypes;
     title: string;
+    answerName: string;
+    isRequired: boolean;
     description?: string;
     possibleAnswers?: string[];
-    userAnswer?: AnswerType;
-    isRequired: boolean;
+    userAnswer?: AnswerTypes;
     children?: Question[];
-    showChildrenOn?: AnswerType | boolean;
+    showChildrenOn?: string[] | boolean;
+    metadata?: string;
 }
-interface Checkbox extends Question {
+interface CheckboxForm extends Question {
     type: 'Checkbox';
     possibleAnswers: string[];
     userAnswer?: string[];
+    showChildrenOn?: string[] | boolean;
 }
-interface Email extends Question {
+interface EmailForm extends Question {
     type: 'Email';
     userAnswer?: string;
+    showChildrenOn?: boolean;
 }
-interface Num extends Question {
+interface NumForm extends Question {
     type: 'Num';
     userAnswer?: number;
+    showChildrenOn?: boolean;
 }
-interface Radio extends Question {
+interface RadioForm extends Question {
     type: 'Radio';
     possibleAnswers: string[];
     userAnswer?: string;
+    showChildrenOn?: string[] | boolean;
 }
-interface Range extends Question {
+interface RangeForm extends Question {
     type: 'Range';
     min: number;
     max: number;
     userAnswer?: number;
+    showChildrenOn?: boolean;
 }
-interface Text extends Question {
+interface TextForm extends Question {
     type: 'Text';
     userAnswer?: string;
+    showChildrenOn?: boolean;
 }
-interface Date extends Question {
-    type: 'Date';
+interface TimeForm extends Question {
+    type: 'Time';
     userAnswer?: string;
+    showChildrenOn?: boolean;
 }
 interface Survey {
     questions: Question[];
     name: string;
+    metadata?: string;
 }
 //# sourceMappingURL=types.d.ts.map
