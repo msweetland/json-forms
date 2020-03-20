@@ -8,6 +8,8 @@ import {
   isRangeForm,
   isTextForm,
   isTimeForm,
+  hasUniqueTitles,
+  isForm,
 } from '../typeGuards';
 
 test('Test isFormType', () => {
@@ -40,6 +42,7 @@ test('Test isQuestion', () => {
     type: 'Checkbox',
     title: 'Title',
     isRequired: true,
+    possibleAnswers: ['a', 'b'],
   };
   expect(isQuestion(working)).toEqual(true);
 
@@ -250,4 +253,126 @@ test('Test isTimeForm', () => {
   const now = new Date();
   expect(isTimeForm({ ...working, answer: now.getTime() })).toEqual(true);
   expect(isTimeForm({ ...working, answer: now })).toEqual(true);
+});
+
+test('Test hasUniqueTitles', () => {
+  let validFormDuplicateTiles: Form = {
+    questions: [
+      {
+        title: 'A',
+        type: 'Email',
+        isRequired: true,
+        children: [
+          {
+            title: 'B',
+            type: 'Range',
+            min: 0,
+            max: 1,
+            isRequired: false,
+          },
+          {
+            title: 'B',
+            type: 'Range',
+            min: 0,
+            max: 1,
+            isRequired: false,
+          },
+        ],
+      },
+    ],
+  };
+
+  expect(() => hasUniqueTitles(validFormDuplicateTiles.questions)).toThrow(
+    Error
+  );
+
+  validFormDuplicateTiles = {
+    questions: [
+      {
+        title: 'A',
+        type: 'Email',
+        isRequired: true,
+        children: [
+          {
+            title: 'B',
+            type: 'Range',
+            min: 0,
+            max: 1,
+            isRequired: false,
+          },
+          {
+            title: 'C',
+            type: 'Range',
+            min: 0,
+            max: 1,
+            isRequired: false,
+          },
+        ],
+      },
+    ],
+  };
+
+  expect(hasUniqueTitles(validFormDuplicateTiles.questions)).toEqual(
+    new Set(['A', 'B', 'C'])
+  );
+});
+
+test('Test isForm', () => {
+  let form: Form = {
+    questions: [
+      {
+        title: 'A',
+        type: 'Email',
+        isRequired: true,
+        showChildrenOn: true,
+        children: [
+          {
+            title: 'B',
+            type: 'Range',
+            min: 0,
+            max: 1,
+            isRequired: false,
+          },
+          {
+            title: 'B',
+            type: 'Range',
+            min: 0,
+            max: 1,
+            isRequired: false,
+          },
+        ],
+      },
+    ],
+  };
+
+  expect(() => isForm(form)).toThrow(Error);
+
+  form = {
+    questions: [
+      {
+        title: 'A',
+        type: 'Email',
+        isRequired: true,
+        showChildrenOn: true,
+        children: [
+          {
+            title: 'B',
+            type: 'Range',
+            min: 0,
+            max: 1,
+            isRequired: false,
+          },
+          {
+            title: 'C',
+            type: 'Range',
+            min: 0,
+            max: 1,
+            isRequired: false,
+          },
+        ],
+      },
+    ],
+  };
+
+  expect(isForm(form)).toEqual(true);
 });
