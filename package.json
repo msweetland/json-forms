@@ -1,6 +1,6 @@
 {
   "name": "json-form-schema",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert JSON to forms",
   "main": "lib/index.js",
   "types": "lib/*.d.ts",
