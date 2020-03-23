@@ -1,5 +1,5 @@
-import FormClass from '..';
-import { Form } from '../types';
+import FormClass from '../src/index';
+import { Form } from '../src/types';
 
 test('Test FormClass', () => {
   const testobj: Form = {
@@ -19,7 +19,7 @@ test('Test FormClass', () => {
     ],
   };
 
-  const form = new FormClass(JSON.stringify(testobj));
+  const form = new FormClass(testobj);
   expect(form.answerQuestion([0], 'Checkbox', ['A', 'B'])).toEqual(true);
   expect(form.answerQuestion([0, 1, 2], 'Checkbox', 'A')).toEqual(false);
   expect(form.isComplete()).toEqual(false);

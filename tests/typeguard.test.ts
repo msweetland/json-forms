@@ -10,7 +10,7 @@ import {
   isTimeForm,
   hasUniqueTitles,
   isForm,
-} from '../typeGuards';
+} from '../src/typeGuards';
 import {
   Question,
   CheckboxForm,
@@ -21,7 +21,7 @@ import {
   TextForm,
   TimeForm,
   Form,
-} from '../types';
+} from '../src/types';
 
 test('Test isFormType', () => {
   expect(() => isFormType('bad')).toThrow(Error);

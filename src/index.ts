@@ -2,17 +2,20 @@ import { Form, FormType, AnswerType, Answers } from './types';
 import { isForm } from './typeGuards';
 import { isFormComplete, getAnswers } from './utils';
 
+export * from './types';
+
 export default class Base {
   form: Form;
-  constructor(formString: string) {
-    this.form = this.parseFromString(formString);
+  constructor(obj: object) {
+    if (isForm(obj)) this.form = obj;
+    else throw Error();
   }
 
   static validateForm = (obj: object): boolean => isForm(obj);
 
-  private parseFromString(stringSurvey: string): Form {
-    const survey = JSON.parse(stringSurvey);
-    if (isForm(survey)) return survey;
+  public parseFromString(stringSurvey: string): void {
+    const parsed = JSON.parse(stringSurvey);
+    if (isForm(parsed)) this.form = parsed;
     else throw Error();
   }
 

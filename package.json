@@ -1,13 +1,17 @@
 {
   "name": "json-form-schema",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Convert JSON to forms",
   "main": "lib/index.js",
-  "types": "lib/*.d.ts",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
   "scripts": {
     "build": "rm -rf ./lib && tsc -p tsconfig.build.json",
     "test": "jest",
-    "publish": "npm publish"
+    "publish": "npm publish",
+    "lint": "eslint src/**"
   },
   "author": {
     "email": "mjsweetland@gmail.com",
