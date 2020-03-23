@@ -1,5 +1,5 @@
 {
-  "name": "json-forms",
+  "name": "json-form-schema",
   "version": "1.0.0",
   "description": "Convert JSON to forms",
   "main": "lib/index.js",
@@ -7,14 +7,14 @@
   "scripts": {
     "build": "rm -rf ./lib && tsc -p tsconfig.build.json",
     "test": "jest",
-    "publish": "npm publish --access public"
+    "publish": "npm publish"
   },
   "author": {
     "email": "mjsweetland@gmail.com",
     "name": "Michael Sweetland"
   },
   "license": "MIT",
-  "repository": "https://github.com/msweetland/simple-hash-auth",
+  "repository": "https://github.com/msweetland/json-forms",
   "devDependencies": {
     "@types/jest": "^25.1.1",
     "@types/joi": "^14.3.4",
@@ -22,7 +22,6 @@
     "@types/node": "^13.5.3",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
-    "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
     "jest": "^25.1.0",
@@ -37,6 +36,7 @@
     }
   },
   "dependencies": {
+    "eslint": "^6.8.0",
     "joi": "^14.3.1"
   }
 }
