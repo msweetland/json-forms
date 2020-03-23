@@ -71,7 +71,8 @@ type Question =
   | TextForm
   | TimeForm;
 
-type Answers = { [key: string]: string | string[] | number };
+type AnswerType = string | string[] | number;
+type Answers = { [key: string]: AnswerType };
 
 type Form = {
   questions: Question[];
