@@ -11,6 +11,17 @@ import {
   hasUniqueTitles,
   isForm,
 } from '../typeGuards';
+import {
+  Question,
+  CheckboxForm,
+  EmailForm,
+  NumForm,
+  RadioForm,
+  RangeForm,
+  TextForm,
+  TimeForm,
+  Form,
+} from '../types';
 
 test('Test isFormType', () => {
   expect(() => isFormType('bad')).toThrow(Error);

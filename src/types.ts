@@ -1,4 +1,4 @@
-type FormType =
+export type FormType =
   | 'Checkbox'
   | 'Email'
   | 'Num'
@@ -7,7 +7,7 @@ type FormType =
   | 'Text'
   | 'Time';
 
-interface QuestionBase {
+export interface QuestionBase {
   type: FormType;
   title: string;
   description?: string;
@@ -16,33 +16,33 @@ interface QuestionBase {
   showChildrenOn?: string[] | boolean;
 }
 
-interface CheckboxForm extends QuestionBase {
+export interface CheckboxForm extends QuestionBase {
   type: 'Checkbox';
   possibleAnswers: string[];
   answer?: string[];
   showChildrenOn?: string[] | boolean;
 }
 
-interface EmailForm extends QuestionBase {
+export interface EmailForm extends QuestionBase {
   type: 'Email';
   showChildrenOn?: boolean;
   answer?: string;
 }
 
-interface NumForm extends QuestionBase {
+export interface NumForm extends QuestionBase {
   type: 'Num';
   showChildrenOn?: boolean;
   answer?: number;
 }
 
-interface RadioForm extends QuestionBase {
+export interface RadioForm extends QuestionBase {
   type: 'Radio';
   possibleAnswers: string[];
   answer?: string;
   showChildrenOn?: string[] | boolean;
 }
 
-interface RangeForm extends QuestionBase {
+export interface RangeForm extends QuestionBase {
   type: 'Range';
   min: number;
   max: number;
@@ -50,19 +50,19 @@ interface RangeForm extends QuestionBase {
   showChildrenOn?: boolean;
 }
 
-interface TextForm extends QuestionBase {
+export interface TextForm extends QuestionBase {
   type: 'Text';
   answer?: string;
   showChildrenOn?: boolean;
 }
 
-interface TimeForm extends QuestionBase {
+export interface TimeForm extends QuestionBase {
   type: 'Time';
   answer?: number;
   showChildrenOn?: boolean;
 }
 
-type Question =
+export type Question =
   | CheckboxForm
   | EmailForm
   | NumForm
@@ -71,10 +71,10 @@ type Question =
   | TextForm
   | TimeForm;
 
-type AnswerType = string | string[] | number;
-type Answers = { [key: string]: AnswerType };
+export type AnswerType = string | string[] | number;
+export type Answers = { [key: string]: AnswerType };
 
-type Form = {
+export type Form = {
   questions: Question[];
   answers?: Answers;
 };

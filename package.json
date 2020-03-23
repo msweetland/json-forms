@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Convert JSON to forms",
   "main": "lib/index.js",
-  "types": "lib",
+  "types": "lib/*.d.ts",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "test": "jest"
+    "build": "rm -rf ./lib && tsc -p tsconfig.build.json",
+    "test": "jest",
+    "publish": "npm publish --access public"
   },
   "author": {
     "email": "mjsweetland@gmail.com",
@@ -36,8 +37,6 @@
     }
   },
   "dependencies": {
-    "joi": "^14.3.1",
-    "lodash": "^4.17.15",
-    "moment": "^2.24.0"
+    "joi": "^14.3.1"
   }
 }

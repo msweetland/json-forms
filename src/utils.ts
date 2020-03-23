@@ -1,3 +1,5 @@
+import { Question, Form, Answers } from './types';
+
 export const areChildrenVisible = (quest: Question): boolean => {
   if (!(quest.children && quest.showChildrenOn) || !quest.answer) {
     return false;

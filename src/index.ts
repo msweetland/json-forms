@@ -1,17 +1,16 @@
-// import _ from 'lodash';
-
+import { Form, FormType, AnswerType, Answers } from './types';
 import { isForm } from './typeGuards';
 import { isFormComplete, getAnswers } from './utils';
 
-class Base {
+export default class Base {
   form: Form;
   constructor(formString: string) {
-    this.form = this.parseFormString(formString);
+    this.form = this.parseFromString(formString);
   }
 
   static validateForm = (obj: object): boolean => isForm(obj);
 
-  private parseFormString(stringSurvey: string): Form {
+  private parseFromString(stringSurvey: string): Form {
     const survey = JSON.parse(stringSurvey);
     if (isForm(survey)) return survey;
     else throw Error();
@@ -40,7 +39,7 @@ class Base {
         else throw Error('Answer Index out of range or no children present');
       }
     } catch (error) {
-      console.log(error.message);
+      // console.log(error.message);
       return false;
     }
 
@@ -53,12 +52,10 @@ class Base {
         this.form = copy;
       } else throw Error();
     } catch (error) {
-      console.log(error.message);
+      // console.log(error.message);
       return false;
     }
 
     return true;
   };
 }
-
-export default Base;

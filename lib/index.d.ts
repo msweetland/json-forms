@@ -1,11 +1,11 @@
-declare class Base {
+import { Form, FormType, AnswerType, Answers } from './types';
+export default class Base {
     form: Form;
     constructor(formString: string);
     static validateForm: (obj: object) => boolean;
-    private parseFormString;
+    private parseFromString;
     isComplete: () => boolean;
     answers: () => Answers;
     answerQuestion: (questionIdxs: number[], answerType: FormType, answer: AnswerType) => boolean;
 }
-export default Base;
 //# sourceMappingURL=index.d.ts.map

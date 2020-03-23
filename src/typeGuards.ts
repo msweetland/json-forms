@@ -1,4 +1,16 @@
 import Joi from 'joi';
+import {
+  Question,
+  FormType,
+  CheckboxForm,
+  EmailForm,
+  NumForm,
+  RadioForm,
+  RangeForm,
+  TextForm,
+  TimeForm,
+  Form,
+} from './types';
 
 const formTypes = [
   'Checkbox',

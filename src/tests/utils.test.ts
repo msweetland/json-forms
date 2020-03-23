@@ -1,4 +1,5 @@
 import { getAnswers, isFormComplete } from '../utils';
+import { Form } from '../types';
 
 test('Test getAnswers', () => {
   let form: Form = {

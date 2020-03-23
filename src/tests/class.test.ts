@@ -1,4 +1,5 @@
 import FormClass from '..';
+import { Form } from '../types';
 
 test('Test FormClass', () => {
   const testobj: Form = {

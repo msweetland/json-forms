@@ -1,3 +1,4 @@
+import { Question, FormType, CheckboxForm, EmailForm, NumForm, RadioForm, RangeForm, TextForm, TimeForm, Form } from './types';
 export declare const hasUniqueTitles: (questions: Question[]) => Set<string>;
 export declare const isFormType: (s: any) => s is FormType;
 export declare const isQuestion: (object: any) => object is Question;
